@@ -1,0 +1,6 @@
+[benchmarker]
+isu14_bench ansible_host=192.168.37.131
+
+[application]
+isu14_app ansible_host=192.168.37.134
+isu14_db ansible_host=192.168.37.133
