@@ -1,0 +1,97 @@
+- name: edit my.cnf
+  become: true
+  ansible.builtin.template:
+    src: isupipe.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/isupipe.cnf
+    owner: root
+    group: root
+    mode: '0644'
+  tags: install
+
+- name: restart mysql
+  become: true
+  ansible.builtin.systemd_service:
+    state: restarted
+    name: mysql
+  tags: install
+
+- name: restart isuride-go
+  become: true
+  ansible.builtin.systemd_service:
+    state: restarted
+    name: isuride-go
+  tags: install
+
+- name: create mysql_dump_result directory
+  become: true
+  ansible.builtin.file:
+    path: /home/isucon/mysql_slow_result
+    state: directory
+    mode: '0755'
+  tags: install
+
+- name: mysqldump
+  become: true
+  ansible.builtin.shell: |
+    mysqldumpslow /var/log/mysql/mysql-slow.log > /home/isucon/mysql_slow_result/mysql-slow_summary_`date +%m%d%H%M`.log
+  tags: execute
+
+- name: Install  percona-toolkit
+  become: true
+  ansible.builtin.apt:
+    name: percona-toolkit
+    update_cache: yes
+  tags: install
+
+- name: create pt-query_result directory
+  become: true
+  ansible.builtin.file:
+    path: /home/isucon/pt-query_result
+    state: directory
+    mode: '0755'
+  tags: install
+
+- name: execute pt-query-digest
+  become: true
+  ansible.builtin.shell: |
+    pt-query-digest /var/log/mysql/mysql-slow.log > /home/isucon/pt-query_result/digest_`date +%m%d%H%M`.log
+    rm /var/log/mysql/mysql-slow.log
+    mysqladmin flush-logs
+  tags: execute
+
+- name: get log filename
+  become: true
+  ansible.builtin.shell: |
+    ls -la /home/isucon/pt-query_result | sort -r -k 9| awk 'NR==2'| awk '{print $9}'
+  tags: execute
+  register: result
+
+- name: debug fetch file name
+  debug:
+    msg: "{{ result.stdout }}"
+  tags: execute
+
+- name: Fetch file from remote host
+  fetch:
+    src: /home/isucon/pt-query_result/{{ result.stdout }}
+    dest: /home/user/isucon14_suburi/result/pt-query_result/
+  tags: execute
+  
+- name: get log filename
+  become: true
+  ansible.builtin.shell: |
+    ls -la /home/isucon/mysql_slow_result | sort -r -k 9| awk 'NR==2'| awk '{print $9}'
+  tags: execute
+  register: result
+
+- name: debug fetch file name
+  debug:
+    msg: "{{ result.stdout }}"
+  tags: execute
+
+- name: Fetch file from remote host
+  fetch:
+    src: /home/isucon/mysql_slow_result/{{ result.stdout }}
+    dest: /home/user/isucon14_suburi/result/mysql_slow_result/
+  tags: execute
+

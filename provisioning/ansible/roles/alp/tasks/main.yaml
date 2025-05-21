@@ -1,0 +1,70 @@
+- name: edit nginx.conf
+  become: true
+
+  ansible.builtin.template:
+    src: isu_nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  tags: install
+
+- name: check nginx.conf
+  become: true
+  ansible.builtin.shell: |
+    nginx -t
+  register: nginx_check
+  tags: execute
+
+- name: debug nginx_check
+  ansible.builtin.debug:
+    msg: nginx_check stdout {{ nginx_check.stderr }}
+  when: nginx_check is defined
+
+- name: restart nginx
+  become: true
+  ansible.builtin.systemd_service:
+    state: reloaded
+    name: nginx
+  tags: install
+
+- name: install alp
+  become: true
+  ansible.builtin.unarchive:
+    src: https://github.com/tkuchiki/alp/releases/download/v1.0.12/alp_linux_amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+  tags: install
+
+- name: create alp_result directory
+  become: true
+  ansible.builtin.file:
+    path: /home/isucon/alp_result
+    state: directory
+    mode: '0755'
+  tags: install
+
+- name: execute alp
+  become: true
+  ansible.builtin.shell: |
+    cat /var/log/nginx/access.log | alp --sort=avg -r json > /home/isucon/alp_result/alp_`date +%m%d%H%M`.log
+    rm /var/log/nginx/access.log
+    systemctl reload nginx
+  tags: execute
+
+- name: get log filename
+  become: true
+  ansible.builtin.shell: |
+    ls -la /home/isucon/alp_result | sort -r -k 9| head -n 1 | awk '{print $9}'
+  tags: debug
+  register: result
+
+- name: debug fetch file name
+  debug:
+    msg: "{{ result.stdout }}"
+  tags: debug
+
+- name: Fetch file from remote host
+  fetch:
+    src: /home/isucon/alp_result/{{ result.stdout }}
+    dest: /home/user/isucon14_suburi/result/alp_result/
