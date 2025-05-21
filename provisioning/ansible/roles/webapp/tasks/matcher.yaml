@@ -5,6 +5,11 @@
     src: isuride-matcher.service
     dest: /etc/systemd/system/
 
+- name: Reload systemd daemon
+  become: true
+  systemd:
+    daemon_reload: true
+
 - name: Start matcher
   become: true
   service:
