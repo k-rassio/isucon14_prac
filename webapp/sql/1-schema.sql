@@ -36,6 +36,7 @@ CREATE TABLE chairs
 )
   COMMENT = '椅子情報テーブル';
 ALTER TABLE chairs ADD INDEX idx_owner_id(owner_id);
+ALTER TABLE chairs ADD INDEX idx_access_token(access_token);
 
 DROP TABLE IF EXISTS chair_locations;
 CREATE TABLE chair_locations
@@ -48,6 +49,7 @@ CREATE TABLE chair_locations
   PRIMARY KEY (id)
 )
   COMMENT = '椅子の現在位置情報テーブル';
+ALTER TABLE chair_locations ADD INDEX idx_chair_id_created_at(chair_id,created_at);
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users
@@ -126,6 +128,7 @@ CREATE TABLE owners
 )
   COMMENT = '椅子のオーナー情報テーブル';
 ALTER TABLE owners ADD INDEX idx_chair_register_token(chair_register_token);  
+ALTER TABLE owners ADD INDEX idx_access_token(access_token);  
 
 DROP TABLE IF EXISTS coupons;
 CREATE TABLE coupons
