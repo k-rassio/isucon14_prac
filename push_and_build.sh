@@ -19,7 +19,7 @@ cd $isu_ansible_dir
 ansible-playbook -i inventory/inventory.yml -l isu14_app application-deploy.yml
 
 echo "################ benchの実行 ####################"
-ansible -i inventory/inventory.yml isu14_bench -b --become-user isucon -a "/home/isucon/bench_linux_amd64 run ./bench_linux_amd64 run --target=https://192.168.37.134 --payment-url=http://192.168.37.134:12345" | tee ../../result/bench_result/bench_`date +%m%d%H%M`.log 
+ansible -i inventory/inventory.yml isu14_bench -b --become-user isucon -a "/home/isucon/bench_linux_amd64 run ./bench_linux_amd64 run --target=https://192.168.37.134 --payment-url=http://192.168.37.131:12345" | tee ../../result/bench_result/bench_`date +%m%d%H%M`.log 
 
 echo "################ benchの結果を取得 ####################"
 
