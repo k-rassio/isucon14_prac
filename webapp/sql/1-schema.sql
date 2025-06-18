@@ -144,18 +144,3 @@ CREATE TABLE coupons
 )
   COMMENT 'クーポンテーブル';
 ALTER TABLE coupons ADD INDEX idx_used_by(used_by);
-
-CREATE TABLE chair_distances (
-    id VARCHAR(26) PRIMARY KEY,
-    chair_id VARCHAR(26) NOT NULL,
-    from_chair_location_id VARCHAR(26) NOT NULL,
-    to_chair_location_id VARCHAR(26) NOT NULL,
-    distance DOUBLE PRECISION NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (chair_id) REFERENCES chairs(id),
-    FOREIGN KEY (from_chair_location_id) REFERENCES chair_locations(id),
-    FOREIGN KEY (to_chair_location_id) REFERENCES chair_locations(id)
-);
-
-ALTER TABLE chair_distance ADD INDEX idx_chair_distances_chair_id(chair_id);
