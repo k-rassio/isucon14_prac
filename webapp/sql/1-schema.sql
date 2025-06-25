@@ -145,7 +145,7 @@ CREATE TABLE coupons
   COMMENT 'クーポンテーブル';
 ALTER TABLE coupons ADD INDEX idx_used_by(used_by);
 
-DROP TABLE IF EXISTS ride_statuses;
+DROP TABLE IF EXISTS distance_table;
 CREATE TABLE distance_table (
   chair_id VARCHAR(26) PRIMARY KEY,
   total_distance INT NOT NULL,
