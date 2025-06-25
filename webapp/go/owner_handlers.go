@@ -196,6 +196,7 @@ func ownerGetChairs(w http.ResponseWriter, r *http.Request) {
 	owner := ctx.Value("owner").(*Owner)
 
 	chairs := []chairWithDetail{}
+	slog.Info("chairs", "charis", chairs)
 	if err := db.SelectContext(ctx, &chairs, `SELECT id,
        owner_id,
        name,
