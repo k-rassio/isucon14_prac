@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -220,7 +221,7 @@ WHERE owner_id = ?
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-
+	slog.Info("chairs", "charis", chairs)
 	res := ownerGetChairResponse{}
 	for _, chair := range chairs {
 		c := ownerGetChairResponseChair{
