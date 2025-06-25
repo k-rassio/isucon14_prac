@@ -149,4 +149,4 @@ CREATE TABLE distance_table (
   chair_id VARCHAR(26) PRIMARY KEY,
   total_distance INT NOT NULL,
   total_distance_updated_at DATETIME NOT NULL
-);
+)
