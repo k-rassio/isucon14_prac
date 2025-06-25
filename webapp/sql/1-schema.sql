@@ -144,3 +144,9 @@ CREATE TABLE coupons
 )
   COMMENT 'クーポンテーブル';
 ALTER TABLE coupons ADD INDEX idx_used_by(used_by);
+
+CREATE TABLE distance_table (
+  chair_id VARCHAR(26) PRIMARY KEY,
+  total_distance INT NOT NULL,
+  total_distance_updated_at DATETIME NOT NULL
+);
