@@ -127,7 +127,7 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// total_distanceを計算してtotal_distanceテーブルに追加
+	// total_distanceを計算してdistance_tableテーブルに追加
 	var prevLocation ChairLocation
 	err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? AND id != ? ORDER BY created_at DESC LIMIT 1`, chair.ID, chairLocationID)
 	var distance int
@@ -140,7 +140,7 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	if _, err := tx.ExecContext(ctx, `INSERT INTO total_distance (chair_id, distance, created_at) VALUES (?, ?, ?)`, chair.ID, distance, location.CreatedAt); err != nil {
+	if _, err := tx.ExecContext(ctx, `INSERT INTO distance_table (chair_id, distance, created_at) VALUES (?, ?, ?)`, chair.ID, distance, location.CreatedAt); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
