@@ -147,7 +147,8 @@ ALTER TABLE coupons ADD INDEX idx_used_by(used_by);
 
 DROP TABLE IF EXISTS distance_table;
 CREATE TABLE distance_table (
-  chair_id VARCHAR(26) PRIMARY KEY,
-  total_distance INT NOT NULL,
-  total_distance_updated_at DATETIME NOT NULL
-)
+    chair_id VARCHAR(26) PRIMARY KEY,
+    distance INT NOT NULL,
+    updated_at DATETIME(6) NOT NULL
+);
+
