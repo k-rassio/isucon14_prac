@@ -140,7 +140,7 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	if _, err := tx.ExecContext(ctx, `INSERT INTO distance_table (chair_id, distance, created_at) VALUES (?, ?, ?)`, chair.ID, distance, location.CreatedAt); err != nil {
+	if _, err := tx.ExecContext(ctx, `INSERT INTO distance_table (chair_id, distance, updated_at) VALUES (?, ?, ?)`, chair.ID, distance, location.CreatedAt); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
