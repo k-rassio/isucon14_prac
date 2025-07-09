@@ -133,12 +133,67 @@ func postInitialize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// total_distanceテーブルを全chairについて再作成
+	type ChairLocation struct {
+		ChairID   string `db:"chair_id"`
+		Latitude  int    `db:"latitude"`
+		Longitude int    `db:"longitude"`
+		CreatedAt string `db:"created_at"`
+	}
+
+	var chairIDs []string
+	if err := db.SelectContext(ctx, &chairIDs, `SELECT id FROM chairs`); err != nil {
+		writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to fetch chair ids: %w", err))
+		return
+	}
+
+	for _, chairID := range chairIDs {
+		var locations []ChairLocation
+		if err := db.SelectContext(ctx, &locations, `SELECT chair_id, latitude, longitude, created_at FROM chair_locations WHERE chair_id = ? ORDER BY created_at`, chairID); err != nil {
+			writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to fetch locations for chair %s: %w", chairID, err))
+			return
+		}
+
+		totalDistance := 0
+		for i := 1; i < len(locations); i++ {
+			d := abs(locations[i].Latitude-locations[i-1].Latitude) + abs(locations[i].Longitude-locations[i-1].Longitude)
+			totalDistance += d
+		}
+
+		var updatedAt interface{}
+		if len(locations) > 0 {
+			updatedAt = locations[len(locations)-1].CreatedAt
+		} else {
+			updatedAt = nil
+		}
+
+		if updatedAt != nil {
+			_, err := db.ExecContext(ctx, `
+				INSERT INTO total_distance (chair_id, distance, updated_at)
+				VALUES (?, ?, ?)
+				ON DUPLICATE KEY UPDATE distance = VALUES(distance), updated_at = VALUES(updated_at)
+			`, chairID, totalDistance, updatedAt)
+			if err != nil {
+				writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to upsert total_distance for chair %s: %w", chairID, err))
+				return
+			}
+		}
+	}
+
 	if _, err := db.ExecContext(ctx, "UPDATE settings SET value = ? WHERE name = 'payment_gateway_url'", req.PaymentServer); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	writeJSON(w, http.StatusOK, postInitializeResponse{Language: "go"})
+}
+
+// abs関数がなければ追加
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
 
 type Coordinate struct {
