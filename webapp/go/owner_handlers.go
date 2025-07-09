@@ -197,20 +197,23 @@ func ownerGetChairs(w http.ResponseWriter, r *http.Request) {
 
 	chairs := []chairWithDetail{}
 	slog.Info("chairs", "charis", chairs)
-	if err := db.SelectContext(ctx, &chairs, `SELECT id,
-       owner_id,
-       name,
-       access_token,
-       model,
-       is_active,
-       created_at,
-       updated_at,
-       IFNULL(total_distance, 0) AS total_distance,
-       total_distance_updated_at
+	if err := db.SelectContext(ctx, &chairs, `
+SELECT
+  chairs.id,
+  chairs.owner_id,
+  chairs.name,
+  chairs.access_token,
+  chairs.model,
+  chairs.is_active,
+  chairs.created_at,
+  chairs.updated_at,
+  IFNULL(total_distance.distance, 0) AS total_distance,
+  total_distance.updated_at AS total_distance_updated_at
 FROM chairs
-LEFT JOIN  total_distance ON total_distance.chair_id = chairs.id
+LEFT JOIN total_distance ON total_distance.chair_id = chairs.id
 WHERE chairs.owner_id = ?
 `, owner.ID); err != nil {
+		slog.Error("failed to select chairs with total_distance", "owner_id", owner.ID, "error", err)
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
