@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -162,7 +163,12 @@ func postInitialize(w http.ResponseWriter, r *http.Request) {
 
 		var updatedAt interface{}
 		if len(locations) > 0 {
-			updatedAt = locations[len(locations)-1].CreatedAt
+			t, err := time.Parse(time.RFC3339, locations[len(locations)-1].CreatedAt)
+			if err != nil {
+				writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to parse created_at: %w", err))
+				return
+			}
+			updatedAt = t.Format("2006-01-02 15:04:05.000000")
 		} else {
 			updatedAt = nil
 		}
