@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -773,6 +774,10 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		flusher.Flush()
 		return
 	}
+
+	// 送信内容をslogでログ出力
+	slog.Info("SSE /api/app/notification", "data", string(b))
+
 	fmt.Fprintf(w, "data: %s\n\n", b)
 	flusher.Flush()
 }
