@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -656,9 +658,22 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	user := ctx.Value("user").(*User)
 
+	// SSE用ヘッダ
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
+		return
+	}
+
+	// 通常の処理（1回だけ送る場合。複数回送る場合はforループで繰り返す）
 	tx, err := db.Beginx()
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, err)
+		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
+		flusher.Flush()
 		return
 	}
 	defer tx.Rollback()
@@ -666,12 +681,12 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 	ride := &Ride{}
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE user_id = ? ORDER BY created_at DESC LIMIT 1`, user.ID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			writeJSON(w, http.StatusOK, &appGetNotificationResponse{
-				RetryAfterMs: 30,
-			})
+			fmt.Fprintf(w, "data: %s\n\n", `{"retry_after_ms":30}`)
+			flusher.Flush()
 			return
 		}
-		writeError(w, http.StatusInternalServerError, err)
+		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
+		flusher.Flush()
 		return
 	}
 
@@ -751,7 +766,15 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, response)
+	// JSONエンコードしてSSEで送信
+	b, err := json.Marshal(response)
+	if err != nil {
+		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
+		flusher.Flush()
+		return
+	}
+	fmt.Fprintf(w, "data: %s\n\n", b)
+	flusher.Flush()
 }
 
 func getChairStats(ctx context.Context, tx *sqlx.Tx, chairID string) (appGetNotificationResponseChairStats, error) {
