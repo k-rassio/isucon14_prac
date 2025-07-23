@@ -776,7 +776,8 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 	// 送信内容をslogでログ出力
 	slog.Info("SSE /api/app/notification", "data", string(b))
 
-	fmt.Fprintf(w, "data: %s\n\n", b)
+	// SSEのレスポンスの最後に改行を追加
+	fmt.Fprintf(w, "data: %s\n\n\n", b)
 	flusher.Flush()
 }
 
