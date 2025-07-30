@@ -628,7 +628,8 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 }
 
 type appGetNotificationResponse struct {
-	Data *appGetNotificationResponseData `json:"data"`
+	Data         *appGetNotificationResponseData `json:"data"`
+	RetryAfterMs int                             `json:"retry_after_ms"`
 }
 
 type appGetNotificationResponseData struct {
@@ -681,7 +682,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 	ride := &Ride{}
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE user_id = ? ORDER BY created_at DESC LIMIT 1`, user.ID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			fmt.Fprintf(w, "data: %s\n\n", `{"data":null}`)
+			fmt.Fprintf(w, "data: %s\n\n", `{"retry_after_ms":30}`)
 			flusher.Flush()
 			return
 		}
@@ -729,6 +730,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 			CreatedAt: ride.CreatedAt.UnixMilli(),
 			UpdateAt:  ride.UpdatedAt.UnixMilli(),
 		},
+		RetryAfterMs: 30,
 	}
 
 	if ride.ChairID.Valid {
