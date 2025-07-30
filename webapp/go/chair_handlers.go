@@ -2,10 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"log/slog"
 	"net/http"
 
 	"github.com/oklog/ulid/v2"
@@ -223,37 +221,24 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	chair := ctx.Value("chair").(*Chair)
 
-	// SSE用ヘッダ
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Connection", "keep-alive")
-
-	flusher, ok := w.(http.Flusher)
-	if !ok {
-		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
-		return
-	}
-
 	tx, err := db.Beginx()
 	if err != nil {
-		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-		flusher.Flush()
+		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 	defer tx.Rollback()
-
 	ride := &Ride{}
 	yetSentRideStatus := RideStatus{}
 	status := ""
 
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			fmt.Fprintf(w, "data: %s\n\n\n", `{"data":null}`)
-			flusher.Flush()
+			writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
+				RetryAfterMs: 1000,
+			})
 			return
 		}
-		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-		flusher.Flush()
+		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -261,13 +246,11 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		if errors.Is(err, sql.ErrNoRows) {
 			status, err = getLatestRideStatus(ctx, tx, ride.ID)
 			if err != nil {
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
+				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
 		} else {
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
+			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
 	} else {
@@ -277,27 +260,24 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	user := &User{}
 	err = tx.GetContext(ctx, user, "SELECT * FROM users WHERE id = ? FOR SHARE", ride.UserID)
 	if err != nil {
-		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-		flusher.Flush()
+		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	if yetSentRideStatus.ID != "" {
 		_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET chair_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, yetSentRideStatus.ID)
 		if err != nil {
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
+			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
 	}
 
 	if err := tx.Commit(); err != nil {
-		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-		flusher.Flush()
+		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	response := &chairGetNotificationResponse{
+	writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
 		Data: &chairGetNotificationResponseData{
 			RideID: ride.ID,
 			User: simpleUser{
@@ -314,22 +294,8 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 			},
 			Status: status,
 		},
-	}
-
-	// JSONエンコードしてSSEで送信
-	b, err := json.Marshal(response)
-	if err != nil {
-		fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-		flusher.Flush()
-		return
-	}
-
-	// 送信内容をslogでログ出力
-	slog.Info("SSE /api/chair/notification", "data", string(b))
-
-	// SSEのレスポンスの最後に改行を追加
-	fmt.Fprintf(w, "data: %s\n\n\n", b)
-	flusher.Flush()
+		RetryAfterMs: 1000,
+	})
 }
 
 type postChairRidesRideIDStatusRequest struct {
