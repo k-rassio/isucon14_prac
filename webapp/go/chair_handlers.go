@@ -318,7 +318,8 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// ステータスが変わった場合のみ送信
-		if status != lastStatus || statusID != lastStatusID {
+		// ただし最初のレスポンスは必ず送信する
+		if lastStatus == "" && lastStatusID == "" || status != lastStatus || statusID != lastStatusID {
 			b, err := json.Marshal(response)
 			if err != nil {
 				tx.Rollback()

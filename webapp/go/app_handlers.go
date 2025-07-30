@@ -776,7 +776,8 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// ステータスが変わった場合のみ送信
-		if status != lastStatus || statusID != lastStatusID {
+		// ただし最初のレスポンスは必ず送信する
+		if lastStatus == "" && lastStatusID == "" || status != lastStatus || statusID != lastStatusID {
 			b, err := json.Marshal(response)
 			if err != nil {
 				tx.Rollback()
@@ -785,7 +786,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			slog.Info("SSE /api/app/notification", "data", string(b))
-			fmt.Fprintf(w, "data: %s\n\n", b)
+			fmt.Fprintf(w, "data: %s\n\n", b) // 必ず2つの改行
 			flusher.Flush()
 			lastStatus = status
 			lastStatusID = statusID
