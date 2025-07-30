@@ -808,8 +808,8 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// 0.5秒ごとに監視
-		time.Sleep(500 * time.Millisecond)
+		// 0.05秒ごとに監視
+		time.Sleep(50 * time.Millisecond)
 	}
 }
 
