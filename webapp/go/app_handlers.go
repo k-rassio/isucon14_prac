@@ -6,14 +6,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/labstack/gommon/log" // ← 追加
+
 	"github.com/jmoiron/sqlx"
-	"github.com/labstack/gommon/log"
 	"github.com/oklog/ulid/v2"
 )
 
@@ -724,7 +724,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		} else {
 			status = yetSentRideStatus.Status
 			statusID = yetSentRideStatus.ID
-			log.Printf("yetSentRideStatus: ride_id=%s, status=%s, status_id=%s", ride.ID, status, statusID)
+			log.Infof("yetSentRideStatus: ride_id=%s, status=%s, status_id=%s", ride.ID, status, statusID)
 		}
 
 		fare, err := calculateDiscountedFare(ctx, tx, user.ID, ride, ride.PickupLatitude, ride.PickupLongitude, ride.DestinationLatitude, ride.DestinationLongitude)
@@ -793,7 +793,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 			flusher.Flush()
 			lastStatus = status
 			lastStatusID = statusID
-			log.Printf("lastStatus : ride_id=%s, status=%s, status_id=%s", ride.ID, status, statusID)
+			log.Infof("lastStatus : ride_id=%s, status=%s, status_id=%s", ride.ID, status, statusID)
 
 			// app_sent_atを更新
 			if statusID != "" {
