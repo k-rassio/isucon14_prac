@@ -177,17 +177,21 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		}
 		if status != "COMPLETED" && status != "CANCELED" {
 			if req.Latitude == ride.PickupLatitude && req.Longitude == ride.PickupLongitude && status == "ENROUTE" {
-				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", ulid.Make().String(), ride.ID, "PICKUP"); err != nil {
+				newStatusID := ulid.Make().String()
+				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "PICKUP"); err != nil {
 					writeError(w, http.StatusInternalServerError, err)
 					return
 				}
+				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "PICKUP", "status_id", newStatusID)
 			}
 
 			if req.Latitude == ride.DestinationLatitude && req.Longitude == ride.DestinationLongitude && status == "CARRYING" {
-				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", ulid.Make().String(), ride.ID, "ARRIVED"); err != nil {
+				newStatusID := ulid.Make().String()
+				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "ARRIVED"); err != nil {
 					writeError(w, http.StatusInternalServerError, err)
 					return
 				}
+				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ARRIVED", "status_id", newStatusID)
 			}
 		}
 	}
@@ -395,13 +399,13 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch req.Status {
-	// Acknowledge the ride
 	case "ENROUTE":
-		if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", ulid.Make().String(), ride.ID, "ENROUTE"); err != nil {
+		newStatusID := ulid.Make().String()
+		if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "ENROUTE"); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
-	// After Picking up user
+		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ENROUTE", "status_id", newStatusID)
 	case "CARRYING":
 		status, err := getLatestRideStatus(ctx, tx, ride.ID)
 		if err != nil {
@@ -412,10 +416,12 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusBadRequest, errors.New("chair has not arrived yet"))
 			return
 		}
-		if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", ulid.Make().String(), ride.ID, "CARRYING"); err != nil {
+		newStatusID := ulid.Make().String()
+		if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "CARRYING"); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
+		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "CARRYING", "status_id", newStatusID)
 	default:
 		writeError(w, http.StatusBadRequest, errors.New("invalid status"))
 	}
