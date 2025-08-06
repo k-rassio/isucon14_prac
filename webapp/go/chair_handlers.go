@@ -331,7 +331,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 				flusher.Flush()
 				return
 			}
-			slog.Info("SSE /api/chair/notification", "data", string(b))
+			// slog.Info("SSE /api/chair/notification", "data", string(b))
 			fmt.Fprintf(w, "data: %s\n\n", b)
 			flusher.Flush()
 			lastStatus = status
