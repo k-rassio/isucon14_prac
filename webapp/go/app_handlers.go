@@ -751,6 +751,8 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 
+		slog.Info("ride.ChairID", ride.ChairID)
+
 		if ride.ChairID.Valid {
 			chair := &Chair{}
 			if err := tx.GetContext(ctx, chair, `SELECT * FROM chairs WHERE id = ?`, ride.ChairID); err != nil {
