@@ -786,8 +786,8 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 				flusher.Flush()
 				return
 			}
-			// slog.Info("SSE /api/app/notification", "data", string(b)) // ← この行を削除
-			fmt.Fprintf(w, "data: %s\n\n", b) // 必ず2つの改行
+			slog.Info("SSE /api/app/notification", "data", string(b)) // ← この行を削除
+			fmt.Fprintf(w, "data: %s\n\n", b)                         // 必ず2つの改行
 			flusher.Flush()
 			lastStatus = status
 			lastStatusID = statusID
