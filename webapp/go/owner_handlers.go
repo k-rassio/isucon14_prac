@@ -196,7 +196,7 @@ func ownerGetChairs(w http.ResponseWriter, r *http.Request) {
 	owner := ctx.Value("owner").(*Owner)
 
 	chairs := []chairWithDetail{}
-	slog.Info("chairs", "charis", chairs)
+	// slog.Info("chairs", "charis", chairs)
 	if err := db.SelectContext(ctx, &chairs, `
 SELECT
   chairs.id,
@@ -217,7 +217,7 @@ WHERE chairs.owner_id = ?
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	slog.Info("chairs", "charis", chairs)
+	// slog.Info("chairs", "charis", chairs)
 	res := ownerGetChairResponse{}
 	for _, chair := range chairs {
 		c := ownerGetChairResponseChair{
