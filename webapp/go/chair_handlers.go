@@ -291,6 +291,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		} else {
 			status = yetSentRideStatus.Status
 			statusID = yetSentRideStatus.ID
+			slog.Info("yetSentRideStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
 		}
 
 		user := &User{}
@@ -331,11 +332,12 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 				flusher.Flush()
 				return
 			}
-			// slog.Info("SSE /api/chair/notification", "data", string(b))
+			slog.Info("SSE /api/chair/notification", "data", string(b))
 			fmt.Fprintf(w, "data: %s\n\n", b)
 			flusher.Flush()
 			lastStatus = status
 			lastStatusID = statusID
+			slog.Info("lastStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
 
 			// chair_sent_atを更新
 			if statusID != "" {
