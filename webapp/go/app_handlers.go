@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"log/slog" // ← slogのみ使用
 	"net/http"
 	"strconv"
@@ -671,15 +670,10 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("chair_session")
-	if err != nil {
-		// クッキーが存在しない場合のエラーハンドリング
-		http.Error(w, "chair_session cookie is required", http.StatusBadRequest)
-		return
-	}
+	cookie, _ := r.Cookie("chair_session")
 
 	// セッションIDをサーバーログに出力
-	log.Println("Session ID:", cookie.Value)
+	slog.Info("/api/chair/notification", "Session ID:", cookie.Value)
 
 	// var lastStatus string
 	// var lastStatusID string
