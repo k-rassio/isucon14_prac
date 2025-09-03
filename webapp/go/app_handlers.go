@@ -695,7 +695,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE user_id = ? ORDER BY created_at DESC LIMIT 1`, user.ID); err != nil {
 			tx.Rollback()
 			if errors.Is(err, sql.ErrNoRows) {
-				fmt.Fprintf(w, "data: %s\n\n\n", `{"data":null}`)
+				fmt.Fprintf(w, "data: %s\n\n", `{"data":null}`)
 				flusher.Flush()
 				time.Sleep(1000 * time.Millisecond)
 				continue
