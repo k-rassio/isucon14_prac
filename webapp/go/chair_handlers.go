@@ -229,8 +229,8 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 
 	// SSE用ヘッダ
 	w.Header().Set("Content-Type", "text/event-stream")
-	// w.Header().Set("Cache-Control", "no-cache")
-	// w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
 	w.WriteHeader(http.StatusOK)
 
 	flusher, ok := w.(http.Flusher)
@@ -335,7 +335,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 				flusher.Flush()
 				return
 			}
-			slog.Info("SSE /api/chair/notification", "data", string(b))
+			slog.Info("SSE 椅子向け通知", "data", string(b))
 			fmt.Fprintf(w, "data: %s\n\n", b)
 			flusher.Flush()
 			lastStatus = status

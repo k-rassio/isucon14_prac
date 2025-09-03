@@ -660,8 +660,8 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 
 	// SSE用ヘッダ
 	w.Header().Set("Content-Type", "text/event-stream")
-	// w.Header().Set("Cache-Control", "no-cache")
-	// w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
 	w.WriteHeader(http.StatusOK)
 
 	flusher, ok := w.(http.Flusher)
@@ -670,10 +670,14 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var lastStatus string
-	var lastStatusID string
+	// var lastStatus string
+	// var lastStatusID string
+	loopCount := 0 // ループ回数カウンタ追加
 
 	for {
+		loopCount++ // ループごとにインクリメント
+		slog.Info("SSE appGetNotification loop", "count", loopCount)
+
 		select {
 		case <-r.Context().Done():
 			return
@@ -722,7 +726,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		} else {
 			status = yetSentRideStatus.Status
 			statusID = yetSentRideStatus.ID
-			slog.Info("yetSentRideStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
+			slog.Info("ユーザ向け通知 yetSentRideStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
 		}
 
 		fare, err := calculateDiscountedFare(ctx, tx, user.ID, ride, ride.PickupLatitude, ride.PickupLongitude, ride.DestinationLatitude, ride.DestinationLongitude)
@@ -751,8 +755,6 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 
-		slog.Info("ride.ChairID", ride.ChairID)
-
 		if ride.ChairID.Valid {
 			chair := &Chair{}
 			if err := tx.GetContext(ctx, chair, `SELECT * FROM chairs WHERE id = ?`, ride.ChairID); err != nil {
@@ -780,32 +782,32 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 
 		// ステータスが変わった場合のみ送信
 		// ただし最初のレスポンスは必ず送信する
-		if lastStatus == "" && lastStatusID == "" || status != lastStatus || statusID != lastStatusID {
-			b, err := json.Marshal(response)
+		// if lastStatus == "" && lastStatusID == "" || status != lastStatus || statusID != lastStatusID {
+		b, err := json.Marshal(response)
+		if err != nil {
+			tx.Rollback()
+			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
+			flusher.Flush()
+			return
+		}
+		slog.Info("SSE ユーザ向け通知", "data", string(b)) // ← この行を削除
+		fmt.Fprintf(w, "data: %s\n\n", b)           // 必ず2つの改行
+		flusher.Flush()
+		// lastStatus = status
+		// lastStatusID = statusID
+		slog.Info("ユーザ向け通知 lastStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
+
+		// app_sent_atを更新
+		if statusID != "" {
+			_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET app_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, statusID)
 			if err != nil {
 				tx.Rollback()
 				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
 				flusher.Flush()
 				return
 			}
-			slog.Info("SSE /api/app/notification", "data", string(b)) // ← この行を削除
-			fmt.Fprintf(w, "data: %s\n\n", b)                         // 必ず2つの改行
-			flusher.Flush()
-			lastStatus = status
-			lastStatusID = statusID
-			slog.Info("lastStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
-
-			// app_sent_atを更新
-			if statusID != "" {
-				_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET app_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, statusID)
-				if err != nil {
-					tx.Rollback()
-					fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-					flusher.Flush()
-					return
-				}
-			}
 		}
+		// }
 
 		if err := tx.Commit(); err != nil {
 			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
