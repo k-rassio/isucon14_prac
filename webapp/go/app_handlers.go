@@ -669,12 +669,6 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
-
-	cookie, _ := r.Cookie("chair_session")
-
-	// セッションIDをサーバーログに出力
-	slog.Info("/api/chair/notification", "Session ID:", cookie.Value)
-
 	// var lastStatus string
 	// var lastStatusID string
 	loopCount := 0 // ループ回数カウンタ追加

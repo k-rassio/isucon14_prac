@@ -233,6 +233,17 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	w.WriteHeader(http.StatusOK)
 
+	// リクエストからクッキーを取得
+	cookie, err := r.Cookie("chair_session")
+	if err != nil {
+		// クッキーが存在しない場合のエラーハンドリング
+		http.Error(w, "chair_session cookie is required", http.StatusBadRequest)
+		return
+	}
+
+	// セッションIDをサーバーログに出力
+	slog.Info("/api/chair/notification", "Session ID:", cookie.Value)
+
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
