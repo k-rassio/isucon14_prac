@@ -3,12 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
-	"errors"
-<<<<<<< HEAD
-	"fmt"
-	"log/slog" // ← slogのみ使用
-=======
->>>>>>> parent of 28fd3e6 (/api/app/notificationをSSE対応した)
+	"errors" // ← slogのみ使用
 	"net/http"
 	"strconv"
 	"time"
