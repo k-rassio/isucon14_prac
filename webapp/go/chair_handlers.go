@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/oklog/ulid/v2"
@@ -235,148 +236,6 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	yetSentRideStatus := RideStatus{}
 	status := ""
 
-<<<<<<< HEAD
-	// リクエストからクッキーを取得
-	cookie, err := r.Cookie("chair_session")
-	if err != nil {
-		// クッキーが存在しない場合のエラーハンドリング
-		http.Error(w, "chair_session cookie is required", http.StatusBadRequest)
-		return
-	}
-
-	// セッションIDをサーバーログに出力
-	slog.Info("/api/chair/notification", "Session ID:", cookie.Value)
-
-	flusher, ok := w.(http.Flusher)
-	if !ok {
-		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
-		return
-	}
-
-	var lastStatus string
-	var lastStatusID string
-
-	for {
-		select {
-		case <-r.Context().Done():
-			return
-		default:
-		}
-
-		tx, err := db.Beginx()
-		if err != nil {
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
-			return
-		}
-
-		ride := &Ride{}
-		if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
-			tx.Rollback()
-			if errors.Is(err, sql.ErrNoRows) {
-				fmt.Fprintf(w, "data: %s\n\n", `{"data":null}`)
-				flusher.Flush()
-				time.Sleep(1000 * time.Millisecond)
-				continue
-			}
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
-			return
-		}
-
-		yetSentRideStatus := RideStatus{}
-		status := ""
-		statusID := ""
-		if err := tx.GetContext(ctx, &yetSentRideStatus, `SELECT * FROM ride_statuses WHERE ride_id = ? AND chair_sent_at IS NULL ORDER BY created_at ASC LIMIT 1`, ride.ID); err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				status, err = getLatestRideStatus(ctx, tx, ride.ID)
-				if err != nil {
-					tx.Rollback()
-					fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-					flusher.Flush()
-					return
-				}
-			} else {
-				tx.Rollback()
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
-				return
-			}
-		} else {
-			status = yetSentRideStatus.Status
-			statusID = yetSentRideStatus.ID
-			slog.Info("yetSentRideStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
-		}
-
-		user := &User{}
-		err = tx.GetContext(ctx, user, "SELECT * FROM users WHERE id = ? FOR SHARE", ride.UserID)
-		if err != nil {
-			tx.Rollback()
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
-			return
-		}
-
-		response := &chairGetNotificationResponse{
-			Data: &chairGetNotificationResponseData{
-				RideID: ride.ID,
-				User: simpleUser{
-					ID:   user.ID,
-					Name: fmt.Sprintf("%s %s", user.Firstname, user.Lastname),
-				},
-				PickupCoordinate: Coordinate{
-					Latitude:  ride.PickupLatitude,
-					Longitude: ride.PickupLongitude,
-				},
-				DestinationCoordinate: Coordinate{
-					Latitude:  ride.DestinationLatitude,
-					Longitude: ride.DestinationLongitude,
-				},
-				Status: status,
-			},
-		}
-
-		// ステータスが変わった場合のみ送信
-		// ただし最初のレスポンスは必ず送信する
-		if lastStatus == "" && lastStatusID == "" || status != lastStatus || statusID != lastStatusID {
-			// ここでresponseの値をログ出力
-			slog.Info("SSE response(before marshal)", "ride_id", ride.ID, "status", status, "status_id", statusID, "response", response)
-
-			b, err := json.Marshal(response)
-			if err != nil {
-				tx.Rollback()
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
-				return
-			}
-			slog.Info("SSE 椅子向け通知", "data", string(b))
-			fmt.Fprintf(w, "data: %s\n\n", b)
-			flusher.Flush()
-			lastStatus = status
-			lastStatusID = statusID
-			slog.Info("lastStatus", "ride_id", ride.ID, "status", status, "status_id", statusID)
-
-			// chair_sent_atを更新
-			if statusID != "" {
-				_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET chair_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, statusID)
-				if err != nil {
-					tx.Rollback()
-					fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-					flusher.Flush()
-					return
-				}
-			}
-		}
-
-		if err := tx.Commit(); err != nil {
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
-			return
-		}
-
-		// 0.05秒ごとに監視
-		time.Sleep(50 * time.Millisecond)
-=======
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
@@ -401,7 +260,6 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		status = yetSentRideStatus.Status
->>>>>>> parent of ed9f8d4 (/api/chair/notificationについてもSSE化した)
 	}
 
 	user := &User{}
