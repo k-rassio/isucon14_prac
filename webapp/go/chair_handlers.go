@@ -2,12 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
-	"time"
 
 	"github.com/oklog/ulid/v2"
 )
@@ -241,7 +239,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
-				RetryAfterMs: 1000,
+				RetryAfterMs: 30,
 			})
 			return
 		}
@@ -260,61 +258,8 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
-
-		response := &chairGetNotificationResponse{
-			Data: &chairGetNotificationResponseData{
-				RideID: ride.ID,
-				User: simpleUser{
-					ID:   user.ID,
-					Name: fmt.Sprintf("%s %s", user.Firstname, user.Lastname),
-				},
-				PickupCoordinate: Coordinate{
-					Latitude:  ride.PickupLatitude,
-					Longitude: ride.PickupLongitude,
-				},
-				DestinationCoordinate: Coordinate{
-					Latitude:  ride.DestinationLatitude,
-					Longitude: ride.DestinationLongitude,
-				},
-				Status: status,
-			},
-		}
-
-		// ステータスが変わった場合のみ送信
-		if status != lastStatus || statusID != lastStatusID {
-			b, err := json.Marshal(response)
-			if err != nil {
-				tx.Rollback()
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
-				return
-			}
-			slog.Info("SSE /api/chair/notification", "data", string(b))
-			fmt.Fprintf(w, "data: %s\n\n", b)
-			flusher.Flush()
-			lastStatus = status
-			lastStatusID = statusID
-
-			// chair_sent_atを更新
-			if statusID != "" {
-				_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET chair_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, statusID)
-				if err != nil {
-					tx.Rollback()
-					fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-					flusher.Flush()
-					return
-				}
-			}
-		}
-
-		if err := tx.Commit(); err != nil {
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
-			return
-		}
-
-		// 0.05秒ごとに監視
-		time.Sleep(50 * time.Millisecond)
+	} else {
+		status = yetSentRideStatus.Status
 	}
 
 	user := &User{}
@@ -354,7 +299,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 			},
 			Status: status,
 		},
-		RetryAfterMs: 1000,
+		RetryAfterMs: 30,
 	})
 }
 

@@ -3,10 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"errors" // ← slogのみ使用
-	"fmt"
-	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -628,9 +625,9 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 }
 
 type appGetNotificationResponse struct {
-	Data *appGetNotificationResponseData `json:"data"`
+	Data         *appGetNotificationResponseData `json:"data"`
+	RetryAfterMs int                             `json:"retry_after_ms"`
 }
-
 type appGetNotificationResponseData struct {
 	RideID                string                           `json:"ride_id"`
 	PickupCoordinate      Coordinate                       `json:"pickup_coordinate"`
@@ -690,85 +687,8 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
-
-		response := &appGetNotificationResponse{
-			Data: &appGetNotificationResponseData{
-				RideID: ride.ID,
-				PickupCoordinate: Coordinate{
-					Latitude:  ride.PickupLatitude,
-					Longitude: ride.PickupLongitude,
-				},
-				DestinationCoordinate: Coordinate{
-					Latitude:  ride.DestinationLatitude,
-					Longitude: ride.DestinationLongitude,
-				},
-				Fare:      fare,
-				Status:    status,
-				CreatedAt: ride.CreatedAt.UnixMilli(),
-				UpdateAt:  ride.UpdatedAt.UnixMilli(),
-			},
-		}
-
-		if ride.ChairID.Valid {
-			chair := &Chair{}
-			if err := tx.GetContext(ctx, chair, `SELECT * FROM chairs WHERE id = ?`, ride.ChairID); err != nil {
-				tx.Rollback()
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
-				return
-			}
-
-			stats, err := getChairStats(ctx, tx, chair.ID)
-			if err != nil {
-				tx.Rollback()
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
-				return
-			}
-
-			response.Data.Chair = &appGetNotificationResponseChair{
-				ID:    chair.ID,
-				Name:  chair.Name,
-				Model: chair.Model,
-				Stats: stats,
-			}
-		}
-
-		// ステータスが変わった場合のみ送信
-		if status != lastStatus || statusID != lastStatusID {
-			b, err := json.Marshal(response)
-			if err != nil {
-				tx.Rollback()
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
-				return
-			}
-			slog.Info("SSE /api/app/notification", "data", string(b))
-			fmt.Fprintf(w, "data: %s\n\n", b)
-			flusher.Flush()
-			lastStatus = status
-			lastStatusID = statusID
-
-			// app_sent_atを更新
-			if statusID != "" {
-				_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET app_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, statusID)
-				if err != nil {
-					tx.Rollback()
-					fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-					flusher.Flush()
-					return
-				}
-			}
-		}
-
-		if err := tx.Commit(); err != nil {
-			fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-			flusher.Flush()
-			return
-		}
-
-		// 0.05秒ごとに監視
-		time.Sleep(50 * time.Millisecond)
+	} else {
+		status = yetSentRideStatus.Status
 	}
 
 	fare, err := calculateDiscountedFare(ctx, tx, user.ID, ride, ride.PickupLatitude, ride.PickupLongitude, ride.DestinationLatitude, ride.DestinationLongitude)
