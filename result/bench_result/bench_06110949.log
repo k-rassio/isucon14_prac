@@ -1,0 +1,98 @@
+isu14_bench | CHANGED | rc=0 >>
+time=18:49:50.555 level=INFO msg=負荷走行を開始します
+time=18:50:11.959 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:17.609 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:18.259 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:19.717 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:19.840 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:19.936 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:20.123 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:23.430 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:28.845 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:30.920 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:30.925 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:30.984 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:33.405 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:33.458 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:34.260 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:39.676 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:41.877 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:41.950 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:42.114 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:45.285 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:45.831 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:45.905 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:51.018 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:55.177 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:55.200 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:55.356 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:56.597 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=18:50:56.773 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:57.013 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=18:50:58.801 level=ERROR msg=クリティカルエラーが発生しました error="評価は完了しているが、支払いが行われていないライドが存在します (CODE=34)"
+time=18:51:03.835 level=INFO msg=最終地域情報 名前=チェアタウン ユーザー登録数=5 アクティブユーザー数=5
+time=18:51:03.835 level=INFO msg=最終地域情報 名前=コシカケシティ ユーザー登録数=5 アクティブユーザー数=5
+time=18:51:03.835 level=INFO msg=最終オーナー情報 名前="Chair Charm" 売上=0 椅子数=4
+time=18:51:03.835 level=INFO msg=最終オーナー情報 名前=椅子と暮らし舎 売上=0 椅子数=4
+time=18:51:03.836 level=INFO msg=最終オーナー情報 名前=CityRide 売上=0 椅子数=4
+time=18:51:03.836 level=INFO msg=最終オーナー情報 名前=ふたたび椅子堂 売上=0 椅子数=4
+time=18:51:03.836 level=INFO msg=最終オーナー情報 名前="PreLoved Chairs" 売上=0 椅子数=4
+time=18:51:03.836 level=INFO msg=結果 pass=false スコア=127 種別エラー数="map[25:20 34:1]"
+time=18:51:03.840 level=INFO msg=負荷走行が終了しましたtime=18:49:50.540 level=DEBUG source=/home/user/isucon14/bench/cmd/run.go:90 msg=target targetURL=https://192.168.37.134:443 targetAddr="" benchrun.GetTargetAddress()="" paymentURL=http://192.168.37.134:12345
+time=18:50:07.993 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=60
+time=18:50:08.061 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:10.066 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=120
+time=18:50:10.121 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:11.958 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=180
+time=18:50:11.958 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:13.815 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=240
+time=18:50:13.815 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:15.616 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=300
+time=18:50:15.618 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:17.567 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=360
+time=18:50:17.608 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:19.664 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=420
+time=18:50:19.665 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:21.464 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=480
+time=18:50:21.465 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:23.387 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=540
+time=18:50:23.413 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:25.192 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=600
+time=18:50:25.196 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:27.018 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=660
+time=18:50:27.019 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:28.844 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=720
+time=18:50:28.845 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:30.644 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=780
+time=18:50:30.645 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:32.444 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=840
+time=18:50:32.445 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:34.259 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=900
+time=18:50:34.259 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:36.045 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=960
+time=18:50:36.045 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:37.885 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1020
+time=18:50:37.887 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:39.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1080
+time=18:50:39.676 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:41.516 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1140
+time=18:50:41.534 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:43.364 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1200
+time=18:50:43.364 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:45.283 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1260
+time=18:50:45.284 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:47.383 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1320
+time=18:50:47.384 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:49.186 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1380
+time=18:50:49.189 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:51.015 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1440
+time=18:50:51.016 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:52.846 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1500
+time=18:50:52.848 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:54.647 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1560
+time=18:50:54.648 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:56.567 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1620
+time=18:50:56.569 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:50:58.439 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1680
+time=18:50:58.440 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=18:51:03.841 level=ERROR source=/home/user/isucon14/bench/cmd/run.go:138 msg=発生したエラー errors="[load:\n    github.com/isucon/isucandar.(*BenchmarkStep).AddError\n        /home/user/go/pkg/mod/github.com/isucon/isucandar@v0.0.0-20220322062028-6dd56dc57d72/benchmark_step.go:30\n    github.com/isucon/isucandar.(*Benchmark).Start.(*Benchmark).Start.func3.func6\n        /home/user/go/pkg/mod/github.com/isucon/isucandar@v0.0.0-20220322062028-6dd56dc57d72/benchmark.go:132\n    github.com/isucon/isucandar/parallel.(*Parallel).Do.func1\n        /home/user/go/pkg/mod/github.com/isucon/isucandar@v0.0.0-20220322062028-6dd56dc57d72/parallel/parallel.go:68\n  - 評価は完了しているが、支払いが行われていないライドが存在します (CODE=34)]"

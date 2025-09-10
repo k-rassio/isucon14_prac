@@ -1,0 +1,9 @@
+Count: 11  Time=0.01s (0s)  Lock=0.00s (0s)  Rows=0.0 (0), isucon[isucon]@localhost
+  SELECT * FROM rides WHERE chair_id IS NULL ORDER BY created_at LIMIT N
+
+Count: 2  Time=0.00s (0s)  Lock=0.00s (0s)  Rows=0.0 (0), isucon[isucon]@localhost
+  #
+
+Count: 2  Time=0.00s (0s)  Lock=0.00s (0s)  Rows=0.0 (0), 0users@0hosts
+  administrator command: Ping
+

@@ -1,0 +1,215 @@
+isu14_bench | CHANGED | rc=0 >>
+time=20:12:36.018 level=INFO msg=負荷走行を開始します
+time=20:12:52.723 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:52.875 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:12:53.548 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:53.987 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:54.355 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:54.616 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:55.175 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:55.654 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:55.910 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:55.914 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:55.985 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:56.420 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:56.564 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:56.605 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:57.338 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:57.429 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:57.830 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:58.018 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:58.025 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:58.244 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:58.273 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:12:58.293 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:58.321 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:58.503 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:12:58.510 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:12:58.520 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:12:58.521 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:12:58.522 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:12:58.592 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:59.290 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:59.400 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:59.688 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:12:59.697 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:00.043 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:00.044 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:00.440 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:00.858 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:00.972 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:00.995 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:01.457 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:01.493 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:01.681 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:01.969 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:02.022 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:02.029 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:02.304 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:02.643 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:02.794 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:02.875 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:02.900 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:03.244 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:03.531 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:03.674 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:03.923 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:04.130 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:04.833 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:04.876 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:04.914 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:05.032 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:05.953 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:06.268 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:06.365 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:06.624 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:06.802 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:06.803 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:06.968 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:07.882 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:08.371 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:08.750 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:09.073 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:09.328 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:09.373 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:09.387 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:09.389 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:09.398 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:09.409 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:10.212 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:10.752 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:10.937 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:10.998 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:11.488 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:11.964 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:12.591 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:13.422 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:14.475 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:15.291 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:15.546 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:16.105 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:16.414 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:16.662 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:17.067 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:18.982 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:19.443 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:19.873 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:20.084 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:20.084 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:20.154 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:20.166 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:20.175 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:20.585 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:21.413 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:21.743 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:21.994 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:23.233 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:24.754 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:25.034 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:25.273 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:26.554 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:26.628 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:30.144 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:30.674 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:31.028 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:31.030 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:31.084 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:31.087 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:31.090 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:31.432 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:32.091 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:34.072 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:34.387 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:36.074 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:38.252 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:38.533 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:40.637 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:41.473 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:41.678 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:41.702 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:41.704 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:41.718 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:41.722 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=20:13:41.795 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:43.216 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:43.498 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:43.899 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:44.821 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:46.874 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=20:13:48.133 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:50.216 level=WARN msg="椅子の座標送信に失敗しました (CODE=1): POST /api/chair/coordinateへのリクエストに対して、期待されたHTTPステータスコードが確認できませんでした (expected:200, actual:500)"
+time=20:13:52.474 level=INFO msg=最終地域情報 名前=チェアタウン ユーザー登録数=5 アクティブユーザー数=5
+time=20:13:52.474 level=INFO msg=最終地域情報 名前=コシカケシティ ユーザー登録数=5 アクティブユーザー数=5
+time=20:13:52.474 level=INFO msg=最終オーナー情報 名前="Urban Wheels" 売上=0 椅子数=4
+time=20:13:52.474 level=INFO msg=最終オーナー情報 名前="Artisan Seats" 売上=0 椅子数=4
+time=20:13:52.474 level=INFO msg=最終オーナー情報 名前="PreLoved Chairs" 売上=0 椅子数=4
+time=20:13:52.474 level=INFO msg=最終オーナー情報 名前=暮らしの椅子研究所 売上=0 椅子数=4
+time=20:13:52.474 level=INFO msg=最終オーナー情報 名前=つばさ交通 売上=0 椅子数=4
+time=20:13:52.474 level=INFO msg=結果 pass=true スコア=2 種別エラー数="map[1:102 25:25]"
+time=20:13:52.474 level=INFO msg=負荷走行が終了しましたtime=20:12:36.017 level=DEBUG source=/home/user/isucon14/bench/cmd/run.go:90 msg=target targetURL=https://192.168.37.134 targetAddr="" benchrun.GetTargetAddress()="" paymentURL=http://192.168.37.131:12345
+time=20:12:49.272 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=60
+time=20:12:49.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:12:51.074 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=120
+time=20:12:51.074 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:12:52.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=180
+time=20:12:52.874 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:12:54.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=240
+time=20:12:54.674 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:12:56.474 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=300
+time=20:12:56.474 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:12:58.272 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=360
+time=20:12:58.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:00.074 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=420
+time=20:13:00.074 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:01.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=480
+time=20:13:01.874 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:03.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=540
+time=20:13:03.674 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:05.473 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=600
+time=20:13:05.474 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:07.274 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=660
+time=20:13:07.275 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:09.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=720
+time=20:13:09.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:10.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=780
+time=20:13:10.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:12.672 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=840
+time=20:13:12.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:14.474 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=900
+time=20:13:14.474 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:16.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=960
+time=20:13:16.274 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:18.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1020
+time=20:13:18.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:19.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1080
+time=20:13:19.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:21.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1140
+time=20:13:21.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:23.473 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1200
+time=20:13:23.473 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:25.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1260
+time=20:13:25.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:27.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1320
+time=20:13:27.074 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:28.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1380
+time=20:13:28.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:30.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1440
+time=20:13:30.674 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:32.474 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1500
+time=20:13:32.474 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:34.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1560
+time=20:13:34.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:36.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1620
+time=20:13:36.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:37.874 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1680
+time=20:13:37.874 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:39.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1740
+time=20:13:39.673 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:41.473 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1800
+time=20:13:41.473 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:43.273 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1860
+time=20:13:43.274 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:45.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1920
+time=20:13:45.073 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=20:13:46.873 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1980
+time=20:13:46.874 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"

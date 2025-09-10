@@ -2,12 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"log/slog"
 	"net/http"
-	"time"
 
 	"github.com/oklog/ulid/v2"
 )
@@ -212,7 +209,8 @@ type simpleUser struct {
 }
 
 type chairGetNotificationResponse struct {
-	Data *chairGetNotificationResponseData `json:"data"`
+	Data         *chairGetNotificationResponseData `json:"data"`
+	RetryAfterMs int                               `json:"retry_after_ms"`
 }
 
 type chairGetNotificationResponseData struct {
@@ -227,12 +225,17 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	chair := ctx.Value("chair").(*Chair)
 
-	// SSE用ヘッダ
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Connection", "keep-alive")
-	w.WriteHeader(http.StatusOK)
+	tx, err := db.Beginx()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer tx.Rollback()
+	ride := &Ride{}
+	yetSentRideStatus := RideStatus{}
+	status := ""
 
+<<<<<<< HEAD
 	// リクエストからクッキーを取得
 	cookie, err := r.Cookie("chair_session")
 	if err != nil {
@@ -373,7 +376,73 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 
 		// 0.05秒ごとに監視
 		time.Sleep(50 * time.Millisecond)
+=======
+	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
+				RetryAfterMs: 1000,
+			})
+			return
+		}
+		writeError(w, http.StatusInternalServerError, err)
+		return
 	}
+
+	if err := tx.GetContext(ctx, &yetSentRideStatus, `SELECT * FROM ride_statuses WHERE ride_id = ? AND chair_sent_at IS NULL ORDER BY created_at ASC LIMIT 1`, ride.ID); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			status, err = getLatestRideStatus(ctx, tx, ride.ID)
+			if err != nil {
+				writeError(w, http.StatusInternalServerError, err)
+				return
+			}
+		} else {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+	} else {
+		status = yetSentRideStatus.Status
+>>>>>>> parent of ed9f8d4 (/api/chair/notificationについてもSSE化した)
+	}
+
+	user := &User{}
+	err = tx.GetContext(ctx, user, "SELECT * FROM users WHERE id = ? FOR SHARE", ride.UserID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if yetSentRideStatus.ID != "" {
+		_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET chair_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, yetSentRideStatus.ID)
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
+		Data: &chairGetNotificationResponseData{
+			RideID: ride.ID,
+			User: simpleUser{
+				ID:   user.ID,
+				Name: fmt.Sprintf("%s %s", user.Firstname, user.Lastname),
+			},
+			PickupCoordinate: Coordinate{
+				Latitude:  ride.PickupLatitude,
+				Longitude: ride.PickupLongitude,
+			},
+			DestinationCoordinate: Coordinate{
+				Latitude:  ride.DestinationLatitude,
+				Longitude: ride.DestinationLongitude,
+			},
+			Status: status,
+		},
+		RetryAfterMs: 1000,
+	})
 }
 
 type postChairRidesRideIDStatusRequest struct {

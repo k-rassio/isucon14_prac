@@ -1,0 +1,166 @@
+isu14_bench | CHANGED | rc=0 >>
+time=19:53:52.512 level=INFO msg=負荷走行を開始します
+time=19:54:04.761 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:10.160 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:10.345 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.348 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.348 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.352 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.358 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.767 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=260&longitude=304\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.814 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=33&longitude=18\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.881 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=324&longitude=332\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.893 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=262&longitude=316\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:10.961 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=44&longitude=-45\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:11.068 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=335&longitude=285\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:11.110 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-9&longitude=-43\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:12.623 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-36&longitude=-19\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:15.559 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:20.481 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=255&longitude=295\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:20.960 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:21.055 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=283&longitude=309\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.056 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-20&longitude=2\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.174 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.176 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.178 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.179 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.180 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.222 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=8&longitude=-30\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.345 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=274&longitude=323\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.357 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=308&longitude=311\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.440 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=311&longitude=301\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:21.467 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=26&longitude=-18\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:22.824 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-45&longitude=-21\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:26.360 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:30.759 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=318&longitude=300\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.292 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-23&longitude=-45\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.318 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=311&longitude=294\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.354 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=32&longitude=-11\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.539 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=264&longitude=328\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.543 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=276&longitude=263\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.584 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=44&longitude=-14\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.696 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=287&longitude=283\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.761 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:31.931 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.931 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.948 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.950 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:31.954 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:32.993 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-31&longitude=-17\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:37.160 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:40.919 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=286&longitude=301\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:41.500 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=40&longitude=25\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:41.507 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-43&longitude=-29\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:41.511 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=276&longitude=289\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:41.752 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=35&longitude=33\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:41.868 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=250&longitude=285\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:41.932 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=299&longitude=290\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:42.071 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=296&longitude=254\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:42.560 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:42.844 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:42.846 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:42.850 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:42.851 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:42.856 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:43.252 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=18&longitude=-7\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:47.960 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:51.078 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=281&longitude=310\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:51.647 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=283&longitude=258\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:51.659 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=4&longitude=24\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:51.829 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-33&longitude=-28\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:51.908 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=15&longitude=-39\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:52.026 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=294&longitude=257\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:52.144 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=312&longitude=286\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:52.330 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=258&longitude=300\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:53.359 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:54:53.461 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-42&longitude=-44\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:53.609 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:53.617 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:53.633 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:53.637 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:53.640 level=WARN msg="オーナーの椅子一覧の取得に失敗しました (CODE=25): GET /api/owner/chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/owner/chairs\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:54:58.760 level=INFO msg=これまでに地域内の評判によって0人、既存ユーザーの招待経由で0人が新規登録しました
+time=19:55:01.194 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=312&longitude=286\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:01.869 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=329&longitude=320\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:01.893 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-17&longitude=-39\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:02.058 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=-49&longitude=41\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:02.142 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=47&longitude=43\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:02.177 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=343&longitude=333\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:02.303 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=277&longitude=265\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:02.645 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=263&longitude=340\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:03.690 level=WARN msg="取得した付近の椅子情報に不備があります (CODE=30): GET /api/app/requests/nearby-chairsのリクエストが失敗しました: Get \"https://192.168.37.134:443/api/app/nearby-chairs?distance=50&latitude=33&longitude=21\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=19:55:04.359 level=INFO msg=最終地域情報 名前=チェアタウン ユーザー登録数=5 アクティブユーザー数=5
+time=19:55:04.360 level=INFO msg=最終地域情報 名前=コシカケシティ ユーザー登録数=5 アクティブユーザー数=5
+time=19:55:04.360 level=INFO msg=最終オーナー情報 名前=ZenSeat 売上=0 椅子数=4
+time=19:55:04.360 level=INFO msg=最終オーナー情報 名前=ReSit 売上=0 椅子数=4
+time=19:55:04.361 level=INFO msg=最終オーナー情報 名前="PreLoved Chairs" 売上=0 椅子数=4
+time=19:55:04.361 level=INFO msg=最終オーナー情報 名前=椅子やいちば 売上=0 椅子数=4
+time=19:55:04.361 level=INFO msg=最終オーナー情報 名前=木座デザイン 売上=0 椅子数=4
+time=19:55:04.361 level=INFO msg=結果 pass=true スコア=29 種別エラー数="map[25:25 30:53]"
+time=19:55:04.362 level=INFO msg=負荷走行が終了しましたtime=19:53:52.511 level=DEBUG source=/home/user/isucon14/bench/cmd/run.go:90 msg=target targetURL=https://192.168.37.134:443 targetAddr="" benchrun.GetTargetAddress()="" paymentURL=https://192.168.37.131:12345
+time=19:54:01.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=60
+time=19:54:01.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:02.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=120
+time=19:54:02.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:04.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=180
+time=19:54:04.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:06.560 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=240
+time=19:54:06.560 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:08.359 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=300
+time=19:54:08.360 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:10.159 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=360
+time=19:54:10.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:11.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=420
+time=19:54:11.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:13.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=480
+time=19:54:13.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:15.559 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=540
+time=19:54:15.559 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:17.359 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=600
+time=19:54:17.359 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:19.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=660
+time=19:54:19.161 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:20.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=720
+time=19:54:20.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:22.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=780
+time=19:54:22.761 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:24.560 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=840
+time=19:54:24.561 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:26.360 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=900
+time=19:54:26.360 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:28.159 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=960
+time=19:54:28.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:29.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1020
+time=19:54:29.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:31.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1080
+time=19:54:31.761 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:33.559 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1140
+time=19:54:33.561 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:35.359 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1200
+time=19:54:35.359 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:37.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1260
+time=19:54:37.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:38.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1320
+time=19:54:38.961 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:40.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1380
+time=19:54:40.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:42.560 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1440
+time=19:54:42.560 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:44.360 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1500
+time=19:54:44.360 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:46.159 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1560
+time=19:54:46.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:47.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1620
+time=19:54:47.960 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:49.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1680
+time=19:54:49.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:51.559 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1740
+time=19:54:51.560 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:53.359 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1800
+time=19:54:53.359 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:55.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1860
+time=19:54:55.160 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:56.959 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1920
+time=19:54:56.959 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
+time=19:54:58.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:315 msg=時間経過 tick=1980
+time=19:54:58.760 level=DEBUG source=/home/user/isucon14/bench/benchmarker/scenario/scenario.go:317 msg=eval reqs=0 score="[0 0 0 0 0]" criteria="[0 0 0 0]"
