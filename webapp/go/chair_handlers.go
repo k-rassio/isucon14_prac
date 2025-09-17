@@ -402,6 +402,8 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ENROUTE", "status_id", newStatusID)
+		// ride_statuses更新後にappNotificationChansへ通知
+		notifyApp(ride.UserID)
 	case "CARRYING":
 		status, err := getLatestRideStatus(ctx, tx, ride.ID)
 		if err != nil {
@@ -418,6 +420,8 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "CARRYING", "status_id", newStatusID)
+		// ride_statuses更新後にappNotificationChansへ通知
+		notifyApp(ride.UserID)
 	default:
 		writeError(w, http.StatusBadRequest, errors.New("invalid status"))
 	}

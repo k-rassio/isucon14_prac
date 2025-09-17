@@ -50,6 +50,14 @@ func internalGetMatching(w http.ResponseWriter, r *http.Request) {
 	}
 	// ridesテーブル更新後にchairNotificationChansへ通知
 	notifyChair(matched.ID)
+	// ridesテーブル更新後にappNotificationChansへ通知
+	notifyApp(ride.UserID)
+
+	// ride_statusesテーブル更新後にもappNotificationChansへ通知（例: ステータス更新処理がある場合）
+	// 例:
+	// if _, err := db.ExecContext(ctx, "UPDATE ride_statuses SET ... WHERE ..."); err == nil {
+	//     notifyApp(ride.UserID)
+	// }
 
 	w.WriteHeader(http.StatusNoContent)
 }

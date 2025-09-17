@@ -634,6 +634,18 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// グローバル: userごとの通知チャネル
+var appNotificationChans = make(map[string]chan struct{})
+
+func notifyApp(userID string) {
+	if ch, ok := appNotificationChans[userID]; ok {
+		select {
+		case ch <- struct{}{}:
+		default:
+		}
+	}
+}
+
 type appGetNotificationResponse struct {
 	Data         *appGetNotificationResponseData `json:"data"`
 	RetryAfterMs int                             `json:"retry_after_ms"`
@@ -673,6 +685,11 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
 		return
 	}
+
+	// チャネル登録
+	ch := make(chan struct{}, 1)
+	appNotificationChans[user.ID] = ch
+	defer delete(appNotificationChans, user.ID)
 
 	for {
 		tx, err := db.Beginx()
@@ -791,10 +808,12 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// チャネル通知を待つ（rides/ride_statuses更新時にnotifyApp(user.ID)を呼ぶこと）
 		select {
 		case <-r.Context().Done():
 			return
-		case <-time.After(1000 * time.Millisecond):
+		case <-ch:
+			// 通知が来たら次の処理へ
 		}
 	}
 }
