@@ -48,6 +48,8 @@ func internalGetMatching(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+	// ridesテーブル更新後にchairNotificationChansへ通知
+	notifyChair(matched.ID)
 
 	w.WriteHeader(http.StatusNoContent)
 }

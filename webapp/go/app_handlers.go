@@ -557,6 +557,10 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, errors.New("ride not found"))
 		return
 	}
+	// ridesテーブル更新後にchairNotificationChansへ通知
+	if ride.ChairID.Valid {
+		notifyChair(ride.ChairID.String)
+	}
 
 	_, err = tx.ExecContext(
 		ctx,
@@ -565,6 +569,10 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
+	}
+	// ride_statusesテーブル更新後にもchairNotificationChansへ通知
+	if ride.ChairID.Valid {
+		notifyChair(ride.ChairID.String)
 	}
 
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE id = ?`, rideID); err != nil {
@@ -786,7 +794,7 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-r.Context().Done():
 			return
-		case <-time.After(300 * time.Millisecond):
+		case <-time.After(1000 * time.Millisecond):
 		}
 	}
 }

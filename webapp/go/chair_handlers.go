@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"time"
 
 	"github.com/oklog/ulid/v2"
 )
@@ -206,6 +205,19 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// グローバル: chairごとの通知チャネル
+var chairNotificationChans = make(map[string]chan struct{})
+
+// 通知関数（rides/ride_statuses更新時に呼び出す）
+func notifyChair(chairID string) {
+	if ch, ok := chairNotificationChans[chairID]; ok {
+		select {
+		case ch <- struct{}{}:
+		default:
+		}
+	}
+}
+
 type simpleUser struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
@@ -235,6 +247,11 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
 		return
 	}
+
+	// チャネル登録
+	ch := make(chan struct{}, 1)
+	chairNotificationChans[chair.ID] = ch
+	defer delete(chairNotificationChans, chair.ID)
 
 	for {
 		tx, err := db.Beginx()
@@ -329,10 +346,12 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// チャネル通知を待つ（rides/ride_statuses更新時にnotifyChair(chair.ID)を呼ぶこと）
 		select {
 		case <-r.Context().Done():
 			return
-		case <-time.After(300 * time.Millisecond):
+		case <-ch:
+			// 通知が来たら次の処理へ
 		}
 	}
 }
