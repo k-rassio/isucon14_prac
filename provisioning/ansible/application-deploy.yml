@@ -9,4 +9,4 @@
         rm -rf /home/isucon/webapp/
   roles:
     - webapp
-    - nginx
+    # - nginx

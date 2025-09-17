@@ -332,7 +332,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-r.Context().Done():
 			return
-		case <-time.After(30 * time.Millisecond):
+		case <-time.After(300 * time.Millisecond):
 		}
 	}
 }
