@@ -256,7 +256,6 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// チャネル登録
 	ch := make(chan struct{}, 1)
 	chairNotificationChansMu.Lock()
 	chairNotificationChans[chair.ID] = ch
@@ -267,7 +266,11 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		chairNotificationChansMu.Unlock()
 	}()
 
-	for {
+	select {
+	case <-r.Context().Done():
+		return
+	case <-ch:
+		// 通知が来たら1回だけ処理
 		tx, err := db.Beginx()
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, err)
@@ -358,14 +361,6 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		if err := tx.Commit(); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
-		}
-
-		// チャネル通知を待つ（rides/ride_statuses更新時にnotifyChair(chair.ID)を呼ぶこと）
-		select {
-		case <-r.Context().Done():
-			return
-		case <-ch:
-			// 通知が来たら次の処理へ
 		}
 	}
 }

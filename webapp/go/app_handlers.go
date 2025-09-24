@@ -702,7 +702,10 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		appNotificationChansMu.Unlock()
 	}()
 
-	for {
+	select {
+	case <-r.Context().Done():
+		return
+	case <-ch:
 		tx, err := db.Beginx()
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, err)
@@ -821,14 +824,6 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 		if err := tx.Commit(); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
-		}
-
-		// チャネル通知を待つ（rides/ride_statuses更新時にnotifyApp(user.ID)を呼ぶこと）
-		select {
-		case <-r.Context().Done():
-			return
-		case <-ch:
-			// 通知が来たら次の処理へ
 		}
 	}
 }
