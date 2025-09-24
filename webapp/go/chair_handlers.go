@@ -183,6 +183,8 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "PICKUP", "status_id", newStatusID)
+				// ride_statuses更新後にappNotificationChansへ通知
+				notifyApp(ride.UserID)
 			}
 
 			if req.Latitude == ride.DestinationLatitude && req.Longitude == ride.DestinationLongitude && status == "CARRYING" {
@@ -192,6 +194,8 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ARRIVED", "status_id", newStatusID)
+				// ride_statuses更新後にappNotificationChansへ通知
+				notifyApp(ride.UserID)
 			}
 		}
 	}
