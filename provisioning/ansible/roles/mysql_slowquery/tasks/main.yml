@@ -92,6 +92,6 @@
 - name: Fetch file from remote host
   fetch:
     src: /home/isucon/mysql_slow_result/{{ result.stdout }}
-    dest: /home/user/isucon14_suburi/result/mysql_slow_result/
+    dest: /home/user/isucon14/result/mysql_slow_result/
   tags: execute
 

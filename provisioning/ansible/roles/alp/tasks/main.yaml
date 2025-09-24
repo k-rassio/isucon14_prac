@@ -67,4 +67,4 @@
 - name: Fetch file from remote host
   fetch:
     src: /home/isucon/alp_result/{{ result.stdout }}
-    dest: /home/user/isucon14_suburi/result/alp_result/
+    dest: /home/user/isucon14/result/alp_result/
