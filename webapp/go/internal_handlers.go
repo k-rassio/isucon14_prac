@@ -49,9 +49,9 @@ func internalGetMatching(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// ridesテーブル更新後にchairNotificationChansへ通知
-	// notifyChair(matched.ID)
+	notifyChair(matched.ID)
 	// ridesテーブル更新後にappNotificationChansへ通知
-	// notifyApp(ride.UserID)
+	notifyApp(ride.UserID)
 
 	// ride_statusesテーブル更新後にもappNotificationChansへ通知（例: ステータス更新処理がある場合）
 	// 例:

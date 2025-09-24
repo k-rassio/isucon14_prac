@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -636,9 +637,13 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 
 // グローバル: userごとの通知チャネル
 var appNotificationChans = make(map[string]chan struct{})
+var appNotificationChansMu sync.Mutex
 
 func notifyApp(userID string) {
-	if ch, ok := appNotificationChans[userID]; ok {
+	appNotificationChansMu.Lock()
+	ch, ok := appNotificationChans[userID]
+	appNotificationChansMu.Unlock()
+	if ok {
 		select {
 		case ch <- struct{}{}:
 		default:
@@ -688,8 +693,14 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 
 	// チャネル登録
 	ch := make(chan struct{}, 1)
+	appNotificationChansMu.Lock()
 	appNotificationChans[user.ID] = ch
-	defer delete(appNotificationChans, user.ID)
+	appNotificationChansMu.Unlock()
+	defer func() {
+		appNotificationChansMu.Lock()
+		delete(appNotificationChans, user.ID)
+		appNotificationChansMu.Unlock()
+	}()
 
 	for {
 		tx, err := db.Beginx()

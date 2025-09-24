@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sync"
 
 	"github.com/oklog/ulid/v2"
 )
@@ -205,12 +206,15 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// グローバル: chairごとの通知チャネル
 var chairNotificationChans = make(map[string]chan struct{})
+var chairNotificationChansMu sync.Mutex
 
 // 通知関数（rides/ride_statuses更新時に呼び出す）
 func notifyChair(chairID string) {
-	if ch, ok := chairNotificationChans[chairID]; ok {
+	chairNotificationChansMu.Lock()
+	ch, ok := chairNotificationChans[chairID]
+	chairNotificationChansMu.Unlock()
+	if ok {
 		select {
 		case ch <- struct{}{}:
 		default:
@@ -250,8 +254,14 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 
 	// チャネル登録
 	ch := make(chan struct{}, 1)
+	chairNotificationChansMu.Lock()
 	chairNotificationChans[chair.ID] = ch
-	defer delete(chairNotificationChans, chair.ID)
+	chairNotificationChansMu.Unlock()
+	defer func() {
+		chairNotificationChansMu.Lock()
+		delete(chairNotificationChans, chair.ID)
+		chairNotificationChansMu.Unlock()
+	}()
 
 	for {
 		tx, err := db.Beginx()
