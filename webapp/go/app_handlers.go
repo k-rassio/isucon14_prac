@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors" // ← slogのみ使用
 	"fmt"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"sync"
@@ -796,6 +797,9 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 				Stats: stats,
 			}
 		}
+
+		// status と ride_id をログ出力
+		slog.Info("appGetNotificationResponse", "ride_id", response.Data.RideID, "status", response.Data.Status)
 
 		b, err := json.Marshal(response.Data)
 		if err != nil {

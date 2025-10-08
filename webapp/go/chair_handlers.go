@@ -339,7 +339,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// statusをslogで表示
-		slog.Info("chairGetNotificationResponse status", "status", response.Data.Status)
+		slog.Info("chairGetNotificationResponse", "ride_id", response.Data.RideID, "status", response.Data.Status)
 
 		b, err := json.Marshal(response.Data)
 		if err != nil {
