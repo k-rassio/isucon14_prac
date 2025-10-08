@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"log/slog"
 	"net/http"
 )
 
@@ -44,14 +45,16 @@ func internalGetMatching(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := db.ExecContext(ctx, "UPDATE rides SET chair_id = ? WHERE id = ?", matched.ID, ride.ID); err != nil {
+	if res, err := db.ExecContext(ctx, "UPDATE rides SET chair_id = ? WHERE id = ?", matched.ID, ride.ID); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
+	} else {
+		// err == nil の場合のみログ出力と通知
+		_ = res
+		slog.Info("UPDATE rides", "ride_id", ride.ID, "chair_id", matched.ID)
+		notifyChair(matched.ID)
+		notifyApp(ride.UserID)
 	}
-	// ridesテーブル更新後にchairNotificationChansへ通知
-	notifyChair(matched.ID)
-	// ridesテーブル更新後にappNotificationChansへ通知
-	notifyApp(ride.UserID)
 
 	// ride_statusesテーブル更新後にもappNotificationChansへ通知（例: ステータス更新処理がある場合）
 	// 例:

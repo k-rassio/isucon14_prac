@@ -181,21 +181,25 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "PICKUP"); err != nil {
 					writeError(w, http.StatusInternalServerError, err)
 					return
+				} else {
+					// errがnilの場合のみログ出力と通知
+					slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "PICKUP", "status_id", newStatusID)
+					notifyApp(ride.UserID)
 				}
-				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "PICKUP", "status_id", newStatusID)
-				// ride_statuses更新後にappNotificationChansへ通知
-				notifyApp(ride.UserID)
-			}
 
-			if req.Latitude == ride.DestinationLatitude && req.Longitude == ride.DestinationLongitude && status == "CARRYING" {
-				newStatusID := ulid.Make().String()
-				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "ARRIVED"); err != nil {
-					writeError(w, http.StatusInternalServerError, err)
-					return
+				// ...existing code...
+
+				if req.Latitude == ride.DestinationLatitude && req.Longitude == ride.DestinationLongitude && status == "CARRYING" {
+					newStatusID := ulid.Make().String()
+					if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "ARRIVED"); err != nil {
+						writeError(w, http.StatusInternalServerError, err)
+						return
+					} else {
+						// errがnilの場合のみログ出力と通知
+						slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ARRIVED", "status_id", newStatusID)
+						notifyApp(ride.UserID)
+					}
 				}
-				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ARRIVED", "status_id", newStatusID)
-				// ride_statuses更新後にappNotificationChansへ通知
-				notifyApp(ride.UserID)
 			}
 		}
 	}
@@ -352,14 +356,15 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 		flusher.Flush()
 
 		if yetSentRideStatus.ID != "" {
-			_, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET chair_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, yetSentRideStatus.ID)
-			if err != nil {
+			if _, err := tx.ExecContext(ctx, `UPDATE ride_statuses SET chair_sent_at = CURRENT_TIMESTAMP(6) WHERE id = ?`, yetSentRideStatus.ID); err != nil {
 				tx.Rollback()
 				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
 				flusher.Flush()
 				return
+			} else {
+				// 更新成功時のみ通知
+				notifyApp(ride.UserID)
 			}
-			notifyApp(ride.UserID)
 		}
 
 		if err := tx.Commit(); err != nil {
@@ -413,10 +418,11 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 		if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "ENROUTE"); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
+		} else {
+			// errがnilの場合のみログ出力と通知
+			slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ENROUTE", "status_id", newStatusID)
+			notifyApp(ride.UserID)
 		}
-		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ENROUTE", "status_id", newStatusID)
-		// ride_statuses更新後にappNotificationChansへ通知
-		notifyApp(ride.UserID)
 	case "CARRYING":
 		status, err := getLatestRideStatus(ctx, tx, ride.ID)
 		if err != nil {
@@ -431,10 +437,11 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 		if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "CARRYING"); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
+		} else {
+			// errがnilの場合のみログ出力と通知
+			slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "CARRYING", "status_id", newStatusID)
+			notifyApp(ride.UserID)
 		}
-		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "CARRYING", "status_id", newStatusID)
-		// ride_statuses更新後にappNotificationChansへ通知
-		notifyApp(ride.UserID)
 	default:
 		writeError(w, http.StatusBadRequest, errors.New("invalid status"))
 	}
