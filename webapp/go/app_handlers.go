@@ -560,9 +560,9 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// ridesテーブル更新後にchairNotificationChansへ通知
-	// if ride.ChairID.Valid {
-	// 	notifyChair(ride.ChairID.String)
-	// }
+	if ride.ChairID.Valid {
+		notifyChair(ride.ChairID.String)
+	}
 
 	_, err = tx.ExecContext(
 		ctx,
@@ -573,9 +573,9 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// ride_statusesテーブル更新後にもchairNotificationChansへ通知
-	if ride.ChairID.Valid {
-		notifyChair(ride.ChairID.String)
-	}
+	// if ride.ChairID.Valid {
+	// 	notifyChair(ride.ChairID.String)
+	// }
 
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE id = ?`, rideID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
