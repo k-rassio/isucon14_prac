@@ -359,6 +359,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 				flusher.Flush()
 				return
 			}
+			notifyApp(ride.UserID)
 		}
 
 		if err := tx.Commit(); err != nil {

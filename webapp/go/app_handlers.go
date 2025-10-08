@@ -820,9 +820,9 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			// ride_statusesテーブル更新後にchairNotificationChansへ通知
-			// if ride.ChairID.Valid {
-			// 	notifyChair(ride.ChairID.String)
-			// }
+			if ride.ChairID.Valid {
+				notifyChair(ride.ChairID.String)
+			}
 		}
 
 		if err := tx.Commit(); err != nil {
