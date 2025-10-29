@@ -8,5 +8,6 @@
       shell: |
         rm -rf /home/isucon/webapp/
   roles:
+    - nginx
     - webapp
-    # - nginx
+
