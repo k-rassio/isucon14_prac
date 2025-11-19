@@ -2,7 +2,7 @@
   become: true
   ansible.builtin.template:
     src: isupipe.cnf.j2
-    dest: /etc/mysql/mysql.conf.d/isupipe.cnf
+    dest: /etc/mysql/mysql.conf.d/z_isupipe.cnf
     owner: root
     group: root
     mode: '0644'
