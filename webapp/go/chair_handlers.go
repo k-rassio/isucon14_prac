@@ -133,7 +133,8 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? AND id != ? ORDER BY created_at DESC LIMIT 1`, chair.ID, chairLocationID)
 	var distance int
 	if err == nil {
-		distance = abs(location.Latitude-prevLocation.Latitude) + abs(location.Longitude-prevLocation.Longitude)
+		// distance =  abs(location.Latitude-prevLocation.Latitude) + abs(location.Longitude-prevLocation.Longitude)
+		distance = calculateDistance(prevLocation.Latitude, prevLocation.Longitude, location.Latitude, location.Longitude)
 	} else if errors.Is(err, sql.ErrNoRows) {
 		distance = 0
 	} else {
@@ -239,7 +240,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
-				RetryAfterMs: 30,
+				RetryAfterMs: 1000,
 			})
 			return
 		}
@@ -299,7 +300,7 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 			},
 			Status: status,
 		},
-		RetryAfterMs: 30,
+		RetryAfterMs: 1000,
 	})
 }
 
