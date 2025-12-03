@@ -123,10 +123,15 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	location := &ChairLocation{}
-	if err := tx.GetContext(ctx, location, `SELECT * FROM chair_locations WHERE id = ?`, chairLocationID); err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
+	// if err := tx.GetContext(ctx, location, `SELECT * FROM chair_locations WHERE id = ?`, chairLocationID); err != nil {
+	// 	writeError(w, http.StatusInternalServerError, err)
+	// 	return
+	// }
+
+	// location.ID = chairLocationID
+	// location.ChairID = chair.ID
+	location.Latitude = req.Latitude
+	location.Longitude = req.Longitude
 
 	// total_distanceを計算してtotal_distanceテーブルに反映
 	var prevLocation ChairLocation
