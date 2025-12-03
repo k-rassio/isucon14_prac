@@ -113,6 +113,9 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback()
 
+	var prevLocation ChairLocation
+	err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? ORDER BY created_at DESC LIMIT 1`, chair.ID)
+
 	chairLocationID := ulid.Make().String()
 	if _, err := tx.ExecContext(
 		ctx,
@@ -129,15 +132,13 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-	location.ID = chairLocationID
-	location.ChairID = chair.ID
 	location.Latitude = req.Latitude
 	location.Longitude = req.Longitude
 	location.CreatedAt = time.Now()
 
 	// total_distanceを計算してtotal_distanceテーブルに反映
-	var prevLocation ChairLocation
-	err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? AND id != ? ORDER BY created_at DESC LIMIT 1`, chair.ID, chairLocationID)
+	// var prevLocation ChairLocation
+	// err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? AND id != ? ORDER BY created_at DESC LIMIT 1`, chair.ID, chairLocationID)
 	var distance int
 	if err == nil {
 		// distance =  abs(location.Latitude-prevLocation.Latitude) + abs(location.Longitude-prevLocation.Longitude)
