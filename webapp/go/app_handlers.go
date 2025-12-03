@@ -868,7 +868,7 @@ func appGetNearbyChairs(w http.ResponseWriter, r *http.Request) {
 	err = tx.SelectContext(
 		ctx,
 		&chairs,
-		`SELECT * FROM chairs where is_active = 0`,
+		`SELECT * FROM chairs`,
 	)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
