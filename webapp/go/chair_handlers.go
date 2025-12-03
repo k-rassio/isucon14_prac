@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/oklog/ulid/v2"
 )
@@ -128,10 +129,11 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-	// location.ID = chairLocationID
-	// location.ChairID = chair.ID
+	location.ID = chairLocationID
+	location.ChairID = chair.ID
 	location.Latitude = req.Latitude
 	location.Longitude = req.Longitude
+	location.CreatedAt = time.Now()
 
 	// total_distanceを計算してtotal_distanceテーブルに反映
 	var prevLocation ChairLocation
