@@ -753,60 +753,96 @@ func appGetNotification(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, response)
 }
 
+type RideStatus_and_ride_evaluation struct {
+	ID          string     `db:"id"`
+	RideID      string     `db:"ride_id"`
+	Status      string     `db:"status"`
+	CreatedAt   time.Time  `db:"created_at"`
+	AppSentAt   *time.Time `db:"app_sent_at"`
+	ChairSentAt *time.Time `db:"chair_sent_at"`
+	Evaluation  *int       `db:"evaluation"`
+}
+
 func getChairStats(ctx context.Context, tx *sqlx.Tx, chairID string) (appGetNotificationResponseChairStats, error) {
 	stats := appGetNotificationResponseChairStats{}
 
-	rides := []Ride{}
-	err := tx.SelectContext(
-		ctx,
-		&rides,
-		`SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC`,
-		chairID,
-	)
-	if err != nil {
+	// 1回のSQLで rides と ride_statuses を結合して取得
+	rows := []RideStatus_and_ride_evaluation{}
+	query := `
+SELECT
+  rs.id,
+  rs.ride_id,
+  rs.status,
+  rs.created_at,
+  rs.app_sent_at,
+  rs.chair_sent_at,
+  r.evaluation
+FROM ride_statuses rs
+JOIN rides r ON r.id = rs.ride_id
+WHERE r.chair_id = ?
+ORDER BY rs.ride_id, rs.created_at
+`
+	if err := tx.SelectContext(ctx, &rows, query, chairID); err != nil {
 		return stats, err
 	}
-
-	totalRideCount := 0
-	totalEvaluation := 0.0
-	for _, ride := range rides {
-		rideStatuses := []RideStatus{}
-		err = tx.SelectContext(
-			ctx,
-			&rideStatuses,
-			`SELECT * FROM ride_statuses WHERE ride_id = ? ORDER BY created_at`,
-			ride.ID,
-		)
-		if err != nil {
-			return stats, err
-		}
-
-		var arrivedAt, pickupedAt *time.Time
-		var isCompleted bool
-		for _, status := range rideStatuses {
-			if status.Status == "ARRIVED" {
-				arrivedAt = &status.CreatedAt
-			} else if status.Status == "CARRYING" {
-				pickupedAt = &status.CreatedAt
-			}
-			if status.Status == "COMPLETED" {
-				isCompleted = true
-			}
-		}
-		if arrivedAt == nil || pickupedAt == nil {
-			continue
-		}
-		if !isCompleted {
-			continue
-		}
-
-		totalRideCount++
-		totalEvaluation += float64(*ride.Evaluation)
+	if len(rows) == 0 {
+		return stats, nil
 	}
 
-	stats.TotalRidesCount = totalRideCount
-	if totalRideCount > 0 {
-		stats.TotalEvaluationAvg = totalEvaluation / float64(totalRideCount)
+	// ride_id ごとにグルーピングして判定
+	type agg struct {
+		arrivedAt   *time.Time
+		pickupedAt  *time.Time
+		isCompleted bool
+		evaluation  *int
+	}
+	g := make(map[string]*agg, 128)
+	for _, r := range rows {
+		a := g[r.RideID]
+		if a == nil {
+			a = &agg{evaluation: r.Evaluation}
+			g[r.RideID] = a
+		}
+		switch r.Status {
+		case "ARRIVED":
+			if a.arrivedAt == nil {
+				t := r.CreatedAt
+				a.arrivedAt = &t
+			}
+		case "CARRYING":
+			if a.pickupedAt == nil {
+				t := r.CreatedAt
+				a.pickupedAt = &t
+			}
+		case "COMPLETED":
+			a.isCompleted = true
+		}
+		// 評価が nil で無ければ保持（同じ ride_id で同一）
+		if a.evaluation == nil && r.Evaluation != nil {
+			a.evaluation = r.Evaluation
+		}
+	}
+
+	// 集計
+	totalCount := 0
+	var totalEval float64
+	for _, v := range g {
+		if v.arrivedAt == nil || v.pickupedAt == nil {
+			continue
+		}
+		if !v.isCompleted {
+			continue
+		}
+		if v.evaluation == nil {
+			continue
+		}
+		totalCount++
+		totalEval += float64(*v.evaluation)
+	}
+
+	stats.TotalRidesCount = totalCount
+	if totalCount > 0 {
+		stats.TotalEvaluationAvg = totalEval / float64(totalCount)
 	}
 
 	return stats, nil
