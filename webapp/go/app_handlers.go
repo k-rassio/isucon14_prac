@@ -199,26 +199,75 @@ func appGetRides(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback()
 
-	rides := []Ride{}
-	if err := tx.SelectContext(
-		ctx,
-		&rides,
-		`SELECT * FROM rides WHERE user_id = ? ORDER BY created_at DESC`,
-		user.ID,
-	); err != nil {
+	// --- 変更: 1回のSQLで rides と各 ride の最新 status を取得 ---
+	type rideWithStatus struct {
+		ID                   string         `db:"id"`
+		PickupLatitude       int            `db:"pickup_latitude"`
+		PickupLongitude      int            `db:"pickup_longitude"`
+		DestinationLatitude  int            `db:"destination_latitude"`
+		DestinationLongitude int            `db:"destination_longitude"`
+		Evaluation           sql.NullInt64  `db:"evaluation"`
+		CreatedAt            time.Time      `db:"created_at"`
+		UpdatedAt            time.Time      `db:"updated_at"`
+		ChairID              sql.NullString `db:"chair_id"`
+		Status               sql.NullString `db:"status"`
+	}
+
+	rows := []rideWithStatus{}
+	query := `
+SELECT
+  r.id,
+  r.pickup_latitude,
+  r.pickup_longitude,
+  r.destination_latitude,
+  r.destination_longitude,
+  r.evaluation,
+  r.created_at,
+  r.updated_at,
+  r.chair_id,
+  (
+    SELECT rs.status
+    FROM ride_statuses rs
+    WHERE rs.ride_id = r.id
+    ORDER BY rs.created_at DESC
+    LIMIT 1
+  ) AS status
+FROM rides r
+WHERE r.user_id = ?
+ORDER BY r.created_at DESC
+`
+	if err := tx.SelectContext(ctx, &rows, query, user.ID); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+	// --- /変更 ---
 
 	items := []getAppRidesResponseItem{}
-	for _, ride := range rides {
-		status, err := getLatestRideStatus(ctx, tx, ride.ID)
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
+	for _, rr := range rows {
+		status := ""
+		if rr.Status.Valid {
+			status = rr.Status.String
 		}
 		if status != "COMPLETED" {
 			continue
+		}
+
+		// build Ride-like struct for existing helpers
+		var evalPtr *int
+		if rr.Evaluation.Valid {
+			v := int(rr.Evaluation.Int64)
+			evalPtr = &v
+		}
+		ride := Ride{
+			ID:                   rr.ID,
+			PickupLatitude:       rr.PickupLatitude,
+			PickupLongitude:      rr.PickupLongitude,
+			DestinationLatitude:  rr.DestinationLatitude,
+			DestinationLongitude: rr.DestinationLongitude,
+			Evaluation:           evalPtr,
+			CreatedAt:            rr.CreatedAt,
+			UpdatedAt:            rr.UpdatedAt,
+			ChairID:              rr.ChairID,
 		}
 
 		fare, err := calculateDiscountedFare(ctx, tx, user.ID, &ride, ride.PickupLatitude, ride.PickupLongitude, ride.DestinationLatitude, ride.DestinationLongitude)
@@ -313,18 +362,38 @@ func appPostRides(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback()
 
-	rides := []Ride{}
-	if err := tx.SelectContext(ctx, &rides, `SELECT * FROM rides WHERE user_id = ?`, user.ID); err != nil {
+	// --- 変更: 1回のSQLで rides と各 ride の最新 status を取得 ---
+	type rideWithStatus struct {
+		ID     string         `db:"id"`
+		Status sql.NullString `db:"status"`
+	}
+
+	rows := []rideWithStatus{}
+	query := `
+SELECT
+  r.id,
+  (
+    SELECT rs.status
+    FROM ride_statuses rs
+    WHERE rs.ride_id = r.id
+    ORDER BY rs.created_at DESC
+    LIMIT 1
+  ) AS status
+FROM rides r
+WHERE r.user_id = ?
+ORDER BY r.created_at DESC
+`
+	if err := tx.SelectContext(ctx, &rows, query, user.ID); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
+	// Go側で判定: COMPLETED 以外が1件でもあればエラー
 	continuingRideCount := 0
-	for _, ride := range rides {
-		status, err := getLatestRideStatus(ctx, tx, ride.ID)
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
+	for _, rr := range rows {
+		status := ""
+		if rr.Status.Valid {
+			status = rr.Status.String
 		}
 		if status != "COMPLETED" {
 			continuingRideCount++
@@ -335,6 +404,7 @@ func appPostRides(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusConflict, errors.New("ride already exists"))
 		return
 	}
+	// --- /変更 ---
 
 	if _, err := tx.ExecContext(
 		ctx,
@@ -529,13 +599,25 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	status, err := getLatestRideStatus(ctx, tx, ride.ID)
-	if err != nil {
+
+	// --- 変更: 1回のSQLで最新ステータスを取得 ---
+	status := sql.NullString{}
+	if err := tx.GetContext(ctx, &status, `
+SELECT rs.status
+FROM ride_statuses rs
+WHERE rs.ride_id = ?
+ORDER BY rs.created_at DESC
+LIMIT 1
+`, ride.ID); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			writeError(w, http.StatusBadRequest, errors.New("no status found"))
+			return
+		}
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	if status != "ARRIVED" {
+	if !status.Valid || status.String != "ARRIVED" {
 		writeError(w, http.StatusBadRequest, errors.New("not arrived yet"))
 		return
 	}
