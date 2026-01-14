@@ -11,7 +11,7 @@ cd $isu_repo_dir
 echo "############# git commit & push ###############"
 # git add . || true
 # git commit -m "$1_`date "+%Y_%m_%d_%H_%M_%S"`" || true
-git push -u origin || true
+git push origin new_main || true
 
 echo "############ appサーバへのデプロイ ################"
 tar -zcvf $webapp_tar_dir $isu_webapp_dir
