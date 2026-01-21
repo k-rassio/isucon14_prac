@@ -999,19 +999,49 @@ func appGetNearbyChairs(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		rides := []*Ride{}
-		if err := tx.SelectContext(ctx, &rides, `SELECT * FROM rides WHERE chair_id = ? ORDER BY created_at DESC`, chair.ID); err != nil {
+		// rides := []*Ride{}
+		// if err := tx.SelectContext(ctx, &rides, `SELECT * FROM rides WHERE chair_id = ? ORDER BY created_at DESC`, chair.ID); err != nil {
+		// 	writeError(w, http.StatusInternalServerError, err)
+		// 	return
+		// }
+
+		type rideWithStatus struct {
+			ID     string         `db:"id"`
+			Status sql.NullString `db:"status"`
+		}
+
+		rows := []rideWithStatus{}
+		query := `
+SELECT
+	r.id,
+	(
+		SELECT rs.status
+		FROM ride_statuses rs
+		WHERE rs.ride_id = r.id
+		ORDER BY rs.created_at DESC
+		LIMIT 1
+	) AS status
+FROM rides r
+WHERE r.chair_id = ?
+ORDER BY r.created_at DESC
+`
+		if err := tx.SelectContext(ctx, &rows, query, chair.ID); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
 
 		skip := false
-		for _, ride := range rides {
+		for _, rr := range rows {
 			// 過去にライドが存在し、かつ、それが完了していない場合はスキップ
-			status, err := getLatestRideStatus(ctx, tx, ride.ID)
-			if err != nil {
-				writeError(w, http.StatusInternalServerError, err)
-				return
+			// status, err := getLatestRideStatus(ctx, tx, ride.ID)
+			// if err != nil {
+			// 	writeError(w, http.StatusInternalServerError, err)
+			// 	return
+			// }
+
+			status := ""
+			if rr.Status.Valid {
+				status = rr.Status.String
 			}
 			if status != "COMPLETED" {
 				skip = true
