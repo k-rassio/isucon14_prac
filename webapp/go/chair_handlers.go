@@ -170,36 +170,84 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ride := &Ride{}
-	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
-		if !errors.Is(err, sql.ErrNoRows) {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-	} else {
-		status, err := getLatestRideStatus(ctx, tx, ride.ID)
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
-		}
-		if status != "COMPLETED" && status != "CANCELED" {
-			if req.Latitude == ride.PickupLatitude && req.Longitude == ride.PickupLongitude && status == "ENROUTE" {
-				newStatusID := ulid.Make().String()
-				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "PICKUP"); err != nil {
-					writeError(w, http.StatusInternalServerError, err)
-					return
-				}
-				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "PICKUP", "status_id", newStatusID)
-			}
+	// ride := &Ride{}
 
-			if req.Latitude == ride.DestinationLatitude && req.Longitude == ride.DestinationLongitude && status == "CARRYING" {
-				newStatusID := ulid.Make().String()
-				if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "ARRIVED"); err != nil {
-					writeError(w, http.StatusInternalServerError, err)
-					return
-				}
-				slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ARRIVED", "status_id", newStatusID)
+	// if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
+	// 	if !errors.Is(err, sql.ErrNoRows) {
+	// 		writeError(w, http.StatusInternalServerError, err)
+	// 		return
+	// 	}
+	// } else {
+	// 	status, err := getLatestRideStatus(ctx, tx, ride.ID)
+	// 	if err != nil {
+	// 		writeError(w, http.StatusInternalServerError, err)
+	// 		return
+	// 	}
+
+	type rideWithStatus struct {
+		ID                   string         `db:"id"`
+		PickupLatitude       int            `db:"pickup_latitude"`
+		PickupLongitude      int            `db:"pickup_longitude"`
+		DestinationLatitude  int            `db:"destination_latitude"`
+		DestinationLongitude int            `db:"destination_longitude"`
+		Status               sql.NullString `db:"status"`
+	}
+
+	rws := &rideWithStatus{}
+	query := `
+SELECT
+	r.id,
+	r.pickup_latitude,
+	r.pickup_longitude,
+	r.destination_latitude,
+	r.destination_longitude,
+	(
+
+		SELECT rs.status
+		FROM ride_statuses rs
+		WHERE rs.ride_id = r.id
+		ORDER BY rs.created_at DESC
+		LIMIT 1
+	) AS status
+FROM rides r
+WHERE r.chair_id = ?
+ORDER BY r.updated_at DESC LIMIT 1
+`
+	if err := tx.GetContext(ctx, rws, query, chair.ID); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// ride がない場合は処理をスキップ
+			if err := tx.Commit(); err != nil {
+				writeError(w, http.StatusInternalServerError, err)
+				return
 			}
+			writeJSON(w, http.StatusOK, &chairPostCoordinateResponse{
+				RecordedAt: location.CreatedAt.UnixMilli(),
+			})
+			return
+		}
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	rwsData := rws
+
+	if rwsData.Status.String != "COMPLETED" && rwsData.Status.String != "CANCELED" {
+		if req.Latitude == rwsData.PickupLatitude && req.Longitude == rwsData.PickupLongitude && rwsData.Status.String == "ENROUTE" {
+			newStatusID := ulid.Make().String()
+			if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "PICKUP"); err != nil {
+				writeError(w, http.StatusInternalServerError, err)
+				return
+			}
+			slog.Info("INSERT ride_statuses", "ride_id", rwsData.ID, "status", "PICKUP", "status_id", newStatusID)
+		}
+
+		if req.Latitude == rwsData.DestinationLatitude && req.Longitude == rwsData.DestinationLongitude && rwsData.Status.String == "CARRYING" {
+			newStatusID := ulid.Make().String()
+			if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "ARRIVED"); err != nil {
+				writeError(w, http.StatusInternalServerError, err)
+				return
+			}
+			slog.Info("INSERT ride_statuses", "ride_id", rwsData.ID, "status", "ARRIVED", "status_id", newStatusID)
 		}
 	}
 
