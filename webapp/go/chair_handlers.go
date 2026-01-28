@@ -238,7 +238,6 @@ ORDER BY r.updated_at DESC LIMIT 1
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
-			slog.Info("INSERT ride_statuses", "ride_id", rwsData.ID, "status", "PICKUP", "status_id", newStatusID)
 		}
 
 		if req.Latitude == rwsData.DestinationLatitude && req.Longitude == rwsData.DestinationLongitude && rwsData.Status.String == "CARRYING" {
@@ -247,7 +246,6 @@ ORDER BY r.updated_at DESC LIMIT 1
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
-			slog.Info("INSERT ride_statuses", "ride_id", rwsData.ID, "status", "ARRIVED", "status_id", newStatusID)
 		}
 	}
 

@@ -100,6 +100,7 @@ CREATE TABLE rides
 ALTER TABLE rides ADD INDEX idx_chair_id(chair_id);
 ALTER TABLE rides ADD INDEX idx_user_id_created_at(user_id, created_at);
 ALTER TABLE rides ADD INDEX idx_chair_id_updated_at(chair_id, updated_at);
+ALTER TABLE rides ADD INDEX idx_rides_chair_id_id (chair_id, id);
 
 DROP TABLE IF EXISTS ride_statuses;
 CREATE TABLE ride_statuses
@@ -116,6 +117,7 @@ CREATE TABLE ride_statuses
 ALTER TABLE ride_statuses ADD INDEX idx_ride_id_created_at(ride_id, created_at);
 ALTER TABLE ride_statuses ADD INDEX idx_ride_statuses_ride_chair_created (ride_id, chair_sent_at, created_at);
 ALTER TABLE ride_statuses ADD INDEX idx_ride_statuses_ride_app_created (ride_id, app_sent_at, created_at);
+ALTER TABLE ride_statuses ADD INDEX idx_ride_statuses_ride_id (ride_id, chair_sent_at);
 
 DROP TABLE IF EXISTS owners;
 CREATE TABLE owners
