@@ -151,20 +151,20 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 直近の合計距離を取得
-	var totalDistance int
-	err = tx.GetContext(ctx, &totalDistance, `SELECT distance FROM total_distance WHERE chair_id = ?`, chair.ID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-	newTotalDistance := totalDistance + distance
+	// var totalDistance int
+	// err = tx.GetContext(ctx, &totalDistance, `SELECT distance FROM total_distance WHERE chair_id = ?`, chair.ID)
+	// if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	// 	writeError(w, http.StatusInternalServerError, err)
+	// 	return
+	// }
+	// newTotalDistance := totalDistance + distance
 
 	// total_distanceテーブルにUPSERT
 	_, err = tx.ExecContext(ctx, `
     INSERT INTO total_distance (chair_id, distance, updated_at)
     VALUES (?, ?, ?)
-    ON DUPLICATE KEY UPDATE distance = VALUES(distance), updated_at = VALUES(updated_at)
-`, chair.ID, newTotalDistance, location.CreatedAt)
+    ON DUPLICATE KEY UPDATE distance = distance + VALUES(distance), updated_at = VALUES(updated_at)
+`, chair.ID, distance, location.CreatedAt)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
