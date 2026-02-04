@@ -50,7 +50,7 @@ CREATE TABLE chair_locations
   PRIMARY KEY (id)
 )
   COMMENT = '椅子の現在位置情報テーブル';
-ALTER TABLE chair_locations ADD INDEX idx_chair_id_created_at(chair_id,created_at);
+ALTER TABLE chair_locations ADD INDEX idx_chair_id_created_at_DESC(chair_id,created_at DESC);
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users
@@ -114,7 +114,7 @@ CREATE TABLE ride_statuses
   PRIMARY KEY (id)
 )
   COMMENT = 'ライドステータスの変更履歴テーブル';
-ALTER TABLE ride_statuses ADD INDEX idx_ride_id_created_at(ride_id, created_at);
+ALTER TABLE ride_statuses ADD INDEX idx_ride_id_created_at_DESC(ride_id, created_at DESC);
 ALTER TABLE ride_statuses ADD INDEX idx_ride_statuses_ride_chair_created (ride_id, chair_sent_at, created_at);
 ALTER TABLE ride_statuses ADD INDEX idx_ride_statuses_ride_app_created (ride_id, app_sent_at, created_at);
 ALTER TABLE ride_statuses ADD INDEX idx_ride_statuses_ride_id (ride_id, chair_sent_at);
@@ -156,4 +156,6 @@ CREATE TABLE total_distance (
     distance INT NOT NULL,
     updated_at DATETIME(6) NOT NULL
 );
+
+ALTER TABLE total_distance ADD INDEX idx_chair_id(chair_id);
 
