@@ -184,31 +184,22 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	// 		return
 	// 	}
 
-	type rideWithStatus struct {
-		ID                   string         `db:"id"`
-		PickupLatitude       int            `db:"pickup_latitude"`
-		PickupLongitude      int            `db:"pickup_longitude"`
-		DestinationLatitude  int            `db:"destination_latitude"`
-		DestinationLongitude int            `db:"destination_longitude"`
-		Status               sql.NullString `db:"status"`
+	type rideWithLatest struct {
+		ID                   string `db:"id"`
+		PickupLatitude       int    `db:"pickup_latitude"`
+		PickupLongitude      int    `db:"pickup_longitude"`
+		DestinationLatitude  int    `db:"destination_latitude"`
+		DestinationLongitude int    `db:"destination_longitude"`
 	}
 
-	rws := &rideWithStatus{}
+	rws := &rideWithLatest{}
 	query := `
 SELECT
 	r.id,
 	r.pickup_latitude,
 	r.pickup_longitude,
 	r.destination_latitude,
-	r.destination_longitude,
-	(
-
-		SELECT rs.status
-		FROM ride_statuses rs
-		WHERE rs.ride_id = r.id
-		ORDER BY rs.created_at DESC
-		LIMIT 1
-	) AS status
+	r.destination_longitude
 FROM rides r
 WHERE r.chair_id = ?
 ORDER BY r.updated_at DESC LIMIT 1
@@ -231,21 +222,29 @@ ORDER BY r.updated_at DESC LIMIT 1
 
 	rwsData := rws
 
-	if rwsData.Status.String != "COMPLETED" && rwsData.Status.String != "CANCELED" {
-		if req.Latitude == rwsData.PickupLatitude && req.Longitude == rwsData.PickupLongitude && rwsData.Status.String == "ENROUTE" {
+	statusStr, err := getLatestRideStatus(ctx, tx, rwsData.ID)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if statusStr != "COMPLETED" && statusStr != "CANCELED" {
+		if req.Latitude == rwsData.PickupLatitude && req.Longitude == rwsData.PickupLongitude && statusStr == "ENROUTE" {
 			newStatusID := ulid.Make().String()
 			if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "PICKUP"); err != nil {
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
+			setLatestRideStatus(rwsData.ID, "PICKUP")
 		}
 
-		if req.Latitude == rwsData.DestinationLatitude && req.Longitude == rwsData.DestinationLongitude && rwsData.Status.String == "CARRYING" {
+		if req.Latitude == rwsData.DestinationLatitude && req.Longitude == rwsData.DestinationLongitude && statusStr == "CARRYING" {
 			newStatusID := ulid.Make().String()
 			if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "ARRIVED"); err != nil {
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
+			setLatestRideStatus(rwsData.ID, "ARRIVED")
 		}
 	}
 
@@ -403,6 +402,7 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
+		setLatestRideStatus(ride.ID, "ENROUTE")
 		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ENROUTE", "status_id", newStatusID)
 	case "CARRYING":
 		status, err := getLatestRideStatus(ctx, tx, ride.ID)
@@ -419,6 +419,7 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
+		setLatestRideStatus(ride.ID, "CARRYING")
 		slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "CARRYING", "status_id", newStatusID)
 	default:
 		writeError(w, http.StatusBadRequest, errors.New("invalid status"))

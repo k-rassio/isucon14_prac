@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	crand "crypto/rand"
 	"encoding/json"
 	"fmt"
@@ -10,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -19,6 +21,46 @@ import (
 )
 
 var db *sqlx.DB
+var latestRideStatusCache = struct {
+	mu sync.RWMutex
+	m  map[string]string
+}{m: make(map[string]string)}
+
+func loadLatestRideStatusCache(ctx context.Context) error {
+	rows := []struct {
+		RideID string `db:"ride_id"`
+		Status string `db:"status"`
+	}{}
+	query := `
+SELECT rs.ride_id, rs.status
+FROM ride_statuses rs
+JOIN (
+  SELECT ride_id, MAX(created_at) AS max_created_at FROM ride_statuses GROUP BY ride_id
+) t ON rs.ride_id = t.ride_id AND rs.created_at = t.max_created_at
+`
+	if err := db.SelectContext(ctx, &rows, query); err != nil {
+		return err
+	}
+	latestRideStatusCache.mu.Lock()
+	defer latestRideStatusCache.mu.Unlock()
+	for _, r := range rows {
+		latestRideStatusCache.m[r.RideID] = r.Status
+	}
+	return nil
+}
+
+func setLatestRideStatus(rideID, status string) {
+	latestRideStatusCache.mu.Lock()
+	latestRideStatusCache.m[rideID] = status
+	latestRideStatusCache.mu.Unlock()
+}
+
+func getLatestRideStatusFromCache(rideID string) (string, bool) {
+	latestRideStatusCache.mu.RLock()
+	s, ok := latestRideStatusCache.m[rideID]
+	latestRideStatusCache.mu.RUnlock()
+	return s, ok
+}
 
 func main() {
 	mux := setup()
@@ -65,6 +107,11 @@ func setup() http.Handler {
 		panic(err)
 	}
 	db = _db
+
+	// load latest ride status cache
+	if err := loadLatestRideStatusCache(context.Background()); err != nil {
+		slog.Warn("failed to load latest ride status cache", "err", err)
+	}
 
 	mux := chi.NewRouter()
 	mux.Use(middleware.Logger)

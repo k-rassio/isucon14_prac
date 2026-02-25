@@ -199,7 +199,7 @@ func appGetRides(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback()
 
-	// --- 変更: 1回のSQLで rides と各 ride の最新 status を取得 ---
+	// fetch rides and consult cache for latest status per ride
 	type rideWithStatus struct {
 		ID                   string         `db:"id"`
 		PickupLatitude       int            `db:"pickup_latitude"`
@@ -210,7 +210,6 @@ func appGetRides(w http.ResponseWriter, r *http.Request) {
 		CreatedAt            time.Time      `db:"created_at"`
 		UpdatedAt            time.Time      `db:"updated_at"`
 		ChairID              sql.NullString `db:"chair_id"`
-		Status               sql.NullString `db:"status"`
 	}
 
 	rows := []rideWithStatus{}
@@ -224,14 +223,7 @@ SELECT
   r.evaluation,
   r.created_at,
   r.updated_at,
-  r.chair_id,
-  (
-    SELECT rs.status
-    FROM ride_statuses rs
-    WHERE rs.ride_id = r.id
-    ORDER BY rs.created_at DESC
-    LIMIT 1
-  ) AS status
+  r.chair_id
 FROM rides r
 WHERE r.user_id = ?
 ORDER BY r.created_at DESC
@@ -240,13 +232,16 @@ ORDER BY r.created_at DESC
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	// --- /変更 ---
 
 	items := []getAppRidesResponseItem{}
 	for _, rr := range rows {
-		status := ""
-		if rr.Status.Valid {
-			status = rr.Status.String
+		status, err := getLatestRideStatus(ctx, tx, rr.ID)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				continue
+			}
+			writeError(w, http.StatusInternalServerError, err)
+			return
 		}
 		if status != "COMPLETED" {
 			continue
@@ -333,10 +328,16 @@ type executableGet interface {
 }
 
 func getLatestRideStatus(ctx context.Context, tx executableGet, rideID string) (string, error) {
+	// try cache first
+	if s, ok := getLatestRideStatusFromCache(rideID); ok {
+		return s, nil
+	}
 	status := ""
 	if err := tx.GetContext(ctx, &status, `SELECT status FROM ride_statuses WHERE ride_id = ? ORDER BY created_at DESC LIMIT 1`, rideID); err != nil {
 		return "", err
 	}
+	// update cache
+	setLatestRideStatus(rideID, status)
 	return status, nil
 }
 
@@ -362,38 +363,23 @@ func appPostRides(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback()
 
-	// --- 変更: 1回のSQLで rides と各 ride の最新 status を取得 ---
-	type rideWithStatus struct {
-		ID     string         `db:"id"`
-		Status sql.NullString `db:"status"`
-	}
-
-	rows := []rideWithStatus{}
-	query := `
-SELECT
-  r.id,
-  (
-    SELECT rs.status
-    FROM ride_statuses rs
-    WHERE rs.ride_id = r.id
-    ORDER BY rs.created_at DESC
-    LIMIT 1
-  ) AS status
-FROM rides r
-WHERE r.user_id = ?
-ORDER BY r.created_at DESC
-`
-	if err := tx.SelectContext(ctx, &rows, query, user.ID); err != nil {
+	// check whether user has any non-COMPLETED rides using cache-first lookup
+	var rideIDs []string
+	if err := tx.SelectContext(ctx, &rideIDs, `SELECT id FROM rides WHERE user_id = ? ORDER BY created_at DESC`, user.ID); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	// Go側で判定: COMPLETED 以外が1件でもあればエラー
 	continuingRideCount := 0
-	for _, rr := range rows {
-		status := ""
-		if rr.Status.Valid {
-			status = rr.Status.String
+	for _, id := range rideIDs {
+		status, err := getLatestRideStatus(ctx, tx, id)
+		if err != nil {
+			// if no status rows exist yet, treat as empty
+			if errors.Is(err, sql.ErrNoRows) {
+				continue
+			}
+			writeError(w, http.StatusInternalServerError, err)
+			return
 		}
 		if status != "COMPLETED" {
 			continuingRideCount++
@@ -404,7 +390,6 @@ ORDER BY r.created_at DESC
 		writeError(w, http.StatusConflict, errors.New("ride already exists"))
 		return
 	}
-	// --- /変更 ---
 
 	if _, err := tx.ExecContext(
 		ctx,
@@ -424,6 +409,9 @@ ORDER BY r.created_at DESC
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	// set cache
+	setLatestRideStatus(rideID, "MATCHING")
 
 	var rideCount int
 	if err := tx.GetContext(ctx, &rideCount, `SELECT COUNT(*) FROM rides WHERE user_id = ? `, user.ID); err != nil {
@@ -600,15 +588,9 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// --- 変更: 1回のSQLで最新ステータスを取得 ---
-	status := sql.NullString{}
-	if err := tx.GetContext(ctx, &status, `
-SELECT rs.status
-FROM ride_statuses rs
-WHERE rs.ride_id = ?
-ORDER BY rs.created_at DESC
-LIMIT 1
-`, ride.ID); err != nil {
+	// get latest status via cache-first helper
+	statusStr, err := getLatestRideStatus(ctx, tx, ride.ID)
+	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			writeError(w, http.StatusBadRequest, errors.New("no status found"))
 			return
@@ -617,7 +599,7 @@ LIMIT 1
 		return
 	}
 
-	if !status.Valid || status.String != "ARRIVED" {
+	if statusStr != "ARRIVED" {
 		writeError(w, http.StatusBadRequest, errors.New("not arrived yet"))
 		return
 	}
@@ -646,6 +628,9 @@ LIMIT 1
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	// set cache
+	setLatestRideStatus(rideID, "COMPLETED")
 
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE id = ?`, rideID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -1005,43 +990,22 @@ func appGetNearbyChairs(w http.ResponseWriter, r *http.Request) {
 		// 	return
 		// }
 
-		type rideWithStatus struct {
-			ID     string         `db:"id"`
-			Status sql.NullString `db:"status"`
-		}
-
-		rows := []rideWithStatus{}
-		query := `
-SELECT
-	r.id,
-	(
-		SELECT rs.status
-		FROM ride_statuses rs
-		WHERE rs.ride_id = r.id
-		ORDER BY rs.created_at DESC
-		LIMIT 1
-	) AS status
-FROM rides r
-WHERE r.chair_id = ?
-ORDER BY r.created_at DESC
-`
-		if err := tx.SelectContext(ctx, &rows, query, chair.ID); err != nil {
+		// fetch ride ids for this chair and check latest status via cache
+		var rideIDs []string
+		if err := tx.SelectContext(ctx, &rideIDs, `SELECT id FROM rides WHERE chair_id = ? ORDER BY created_at DESC`, chair.ID); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
 
 		skip := false
-		for _, rr := range rows {
-			// 過去にライドが存在し、かつ、それが完了していない場合はスキップ
-			// status, err := getLatestRideStatus(ctx, tx, ride.ID)
-			// if err != nil {
-			// 	writeError(w, http.StatusInternalServerError, err)
-			// 	return
-			// }
-
-			status := ""
-			if rr.Status.Valid {
-				status = rr.Status.String
+		for _, rid := range rideIDs {
+			status, err := getLatestRideStatus(ctx, tx, rid)
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					continue
+				}
+				writeError(w, http.StatusInternalServerError, err)
+				return
 			}
 			if status != "COMPLETED" {
 				skip = true

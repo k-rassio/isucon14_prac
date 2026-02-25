@@ -122,13 +122,30 @@ func ownerGetSales(w http.ResponseWriter, r *http.Request) {
 
 	modelSalesByModel := map[string]int{}
 	for _, chair := range chairs {
+		// fetch rides in time range and filter by latest status using cache
 		rides := []Ride{}
-		if err := tx.SelectContext(ctx, &rides, "SELECT rides.* FROM rides JOIN ride_statuses ON rides.id = ride_statuses.ride_id WHERE chair_id = ? AND status = 'COMPLETED' AND updated_at BETWEEN ? AND ? + INTERVAL 999 MICROSECOND", chair.ID, since, until); err != nil {
+		if err := tx.SelectContext(ctx, &rides, "SELECT * FROM rides WHERE chair_id = ? AND updated_at BETWEEN ? AND ? + INTERVAL 999 MICROSECOND", chair.ID, since, until); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		sales := sumSales(rides)
+		// filter only rides whose latest status is COMPLETED
+		completedRides := make([]Ride, 0, len(rides))
+		for _, rd := range rides {
+			st, err := getLatestRideStatus(ctx, tx, rd.ID)
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					continue
+				}
+				writeError(w, http.StatusInternalServerError, err)
+				return
+			}
+			if st == "COMPLETED" {
+				completedRides = append(completedRides, rd)
+			}
+		}
+
+		sales := sumSales(completedRides)
 		res.TotalSales += sales
 
 		res.Chairs = append(res.Chairs, chairSales{
