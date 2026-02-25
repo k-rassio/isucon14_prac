@@ -33,7 +33,7 @@
 - name: mysqldump
   become: true
   ansible.builtin.shell: |
-    mysqldumpslow /var/log/mysql/mysql-slow.log > /home/isucon/mysql_slow_result/mysql-slow_summary_`date +%m%d%H%M`.log
+    mysqldumpslow /var/log/mysql/mysql-slow.log > /home/isucon/mysql_slow_result/mysql-slow_summary_`date +%Y%m%d%H%M`.log
   tags: execute
 
 - name: Install  percona-toolkit
@@ -62,7 +62,7 @@
 - name: get log filename
   become: true
   ansible.builtin.shell: |
-    ls -la /home/isucon/pt-query_result | sort -r -k 9| awk 'NR==2'| awk '{print $9}'
+    ls -t /home/isucon/pt-query_result | head -1
   tags: execute
   register: result
 
@@ -80,7 +80,7 @@
 - name: get log filename
   become: true
   ansible.builtin.shell: |
-    ls -la /home/isucon/mysql_slow_result | sort -r -k 9| awk 'NR==2'| awk '{print $9}'
+    ls -t /home/isucon/mysql_slow_result | head -1
   tags: execute
   register: result
 
