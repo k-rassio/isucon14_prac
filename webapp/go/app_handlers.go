@@ -1017,19 +1017,29 @@ func appGetNearbyChairs(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// 最新の位置情報を取得
+		// try memory cache before hitting the database
 		chairLocation := &ChairLocation{}
-		err = tx.GetContext(
-			ctx,
-			chairLocation,
-			`SELECT * FROM chair_locations WHERE chair_id = ? ORDER BY created_at DESC LIMIT 1`,
-			chair.ID,
-		)
-		if err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				continue
+		if v, ok := latestChairLocation.Load(chair.ID); ok {
+			loc := v.(ChairLocation)
+			chairLocation.Latitude = loc.Latitude
+			chairLocation.Longitude = loc.Longitude
+			chairLocation.CreatedAt = loc.CreatedAt
+		} else {
+			err = tx.GetContext(
+				ctx,
+				chairLocation,
+				`SELECT * FROM chair_locations WHERE chair_id = ? ORDER BY created_at DESC LIMIT 1`,
+				chair.ID,
+			)
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					continue
+				}
+				writeError(w, http.StatusInternalServerError, err)
+				return
 			}
-			writeError(w, http.StatusInternalServerError, err)
-			return
+			// store into cache for future lookups
+			latestChairLocation.Store(chair.ID, *chairLocation)
 		}
 
 		if calculateDistance(coordinate.Latitude, coordinate.Longitude, chairLocation.Latitude, chairLocation.Longitude) <= distance {

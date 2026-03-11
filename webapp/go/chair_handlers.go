@@ -6,11 +6,21 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/oklog/ulid/v2"
 )
 
+// latestChairLocation holds the most recent reported coordinates for each
+// chair in memory.  By keeping this information locally we avoid querying
+// the database on every /api/chair/coordinate request (the select at line
+// 117 used to do that).  A sync.Map is sufficient because entries are
+// written once per request and read concurrently.
+var latestChairLocation sync.Map // map[string]ChairLocation
+
+// request body for /api/chair
+// this struct was accidentally removed during editing; restore it.
 type chairPostChairsRequest struct {
 	Name               string `json:"name"`
 	Model              string `json:"model"`
@@ -113,8 +123,25 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback()
 
+	// look up the previous location from memory cache first.  If there's
+	// no entry yet we still need to fall back to the database so that we
+	// calculate correct distance after a restart or cache miss.  When the
+	// DB query succeeds we store the result back into the cache.
 	var prevLocation ChairLocation
-	err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? ORDER BY created_at DESC LIMIT 1`, chair.ID)
+	hasPrev := false
+	if v, ok := latestChairLocation.Load(chair.ID); ok {
+		prevLocation = v.(ChairLocation)
+		hasPrev = true
+	} else {
+		// cache miss, try the database once
+		if err := tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? ORDER BY created_at DESC LIMIT 1`, chair.ID); err == nil {
+			hasPrev = true
+			latestChairLocation.Store(chair.ID, prevLocation)
+		} else if !errors.Is(err, sql.ErrNoRows) {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+	}
 
 	chairLocationID := ulid.Make().String()
 	if _, err := tx.ExecContext(
@@ -139,15 +166,15 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	// total_distanceを計算してtotal_distanceテーブルに反映
 	// var prevLocation ChairLocation
 	// err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? AND id != ? ORDER BY created_at DESC LIMIT 1`, chair.ID, chairLocationID)
+	// calculate distance using the cached previous location; if we
+	// didn't have one, treat this as the first report and record zero
+	// distance (matches previous behaviour when the SELECT returned
+	// sql.ErrNoRows).
 	var distance int
-	if err == nil {
-		// distance =  abs(location.Latitude-prevLocation.Latitude) + abs(location.Longitude-prevLocation.Longitude)
+	if hasPrev {
 		distance = calculateDistance(prevLocation.Latitude, prevLocation.Longitude, location.Latitude, location.Longitude)
-	} else if errors.Is(err, sql.ErrNoRows) {
-		distance = 0
 	} else {
-		writeError(w, http.StatusInternalServerError, err)
-		return
+		distance = 0
 	}
 
 	// 直近の合計距離を取得
@@ -252,6 +279,14 @@ ORDER BY r.updated_at DESC LIMIT 1
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	// update the in‑memory cache with the new location so future requests
+	// can compute distance without hitting the database.
+	latestChairLocation.Store(chair.ID, ChairLocation{
+		Latitude:  location.Latitude,
+		Longitude: location.Longitude,
+		CreatedAt: location.CreatedAt,
+	})
 
 	writeJSON(w, http.StatusOK, &chairPostCoordinateResponse{
 		RecordedAt: location.CreatedAt.UnixMilli(),
