@@ -5,6 +5,12 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"sync"
+)
+
+var (
+	chairCache = make(map[string]*Chair)
+	cacheLock  sync.RWMutex
 )
 
 func appAuthMiddleware(next http.Handler) http.Handler {
@@ -66,14 +72,27 @@ func chairAuthMiddleware(next http.Handler) http.Handler {
 		}
 		accessToken := c.Value
 		chair := &Chair{}
-		err = db.GetContext(ctx, chair, "SELECT * FROM chairs WHERE access_token = ?", accessToken)
-		if err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				writeError(w, http.StatusUnauthorized, errors.New("invalid access token"))
+
+		// キャッシュを確認
+		cacheLock.RLock()
+		chair, exists := chairCache[accessToken]
+		cacheLock.RUnlock()
+
+		if !exists {
+			chair := &Chair{}
+			err = db.GetContext(ctx, chair, "SELECT * FROM chairs WHERE access_token = ?", accessToken)
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					writeError(w, http.StatusUnauthorized, errors.New("invalid access token"))
+					return
+				}
+				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
-			writeError(w, http.StatusInternalServerError, err)
-			return
+			// キャッシュに保存
+			cacheLock.Lock()
+			chairCache[accessToken] = chair
+			cacheLock.Unlock()
 		}
 
 		ctx = context.WithValue(ctx, "chair", chair)

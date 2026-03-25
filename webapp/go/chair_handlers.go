@@ -67,6 +67,21 @@ func chairPostChairs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 2. キャッシュ用の構造体を作成（req の値を正確に反映）
+	newChair := &Chair{
+		ID:          chairID,     // 生成したID
+		OwnerID:     owner.ID,    // ログイン中のオーナーID
+		Name:        req.Name,    // ★リクエストから取得
+		Model:       req.Model,   // ★リクエストから取得
+		IsActive:    false,       // INSERT時と同じデフォルト値
+		AccessToken: accessToken, // 生成したトークン
+	}
+
+	// 3. キャッシュを更新
+	cacheLock.Lock()
+	chairCache[accessToken] = newChair
+	cacheLock.Unlock()
+
 	http.SetCookie(w, &http.Cookie{
 		Path:  "/",
 		Name:  "chair_session",
@@ -86,7 +101,6 @@ type postChairActivityRequest struct {
 func chairPostActivity(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	chair := ctx.Value("chair").(*Chair)
-
 	req := &postChairActivityRequest{}
 	if err := bindJSON(r, req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -98,6 +112,9 @@ func chairPostActivity(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+	cacheLock.Lock()
+	chair.IsActive = req.IsActive // ポインタ経由で実体を書き換え
+	cacheLock.Unlock()
 
 	w.WriteHeader(http.StatusNoContent)
 }
