@@ -26,6 +26,15 @@ var latestRideStatusCache = struct {
 	m  map[string]string
 }{m: make(map[string]string)}
 
+type RideCache struct {
+	mu    sync.RWMutex
+	items map[string]Ride // ridesテーブルのデータ
+}
+
+var rideCache = &RideCache{
+	items: make(map[string]Ride),
+}
+
 func loadLatestRideStatusCache(ctx context.Context) error {
 	rows := []struct {
 		RideID string `db:"ride_id"`

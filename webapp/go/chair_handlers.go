@@ -236,35 +236,51 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		DestinationLongitude int    `db:"destination_longitude"`
 	}
 
-	rws := &rideWithLatest{}
-	query := `
-SELECT
-	r.id,
-	r.pickup_latitude,
-	r.pickup_longitude,
-	r.destination_latitude,
-	r.destination_longitude
-FROM rides r
-WHERE r.chair_id = ?
-ORDER BY r.updated_at DESC LIMIT 1
-`
-	if err := tx.GetContext(ctx, rws, query, chair.ID); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			// ride がない場合は処理をスキップ
-			if err := tx.Commit(); err != nil {
-				writeError(w, http.StatusInternalServerError, err)
+	rideCache.mu.RLock()
+	rwsData, rideInCache := rideCache.items[chair.ID]
+	rideCache.mu.RUnlock()
+
+	if !rideInCache {
+		rws := &rideWithLatest{}
+		query := `
+	SELECT
+		r.id,
+		r.pickup_latitude,
+		r.pickup_longitude,
+		r.destination_latitude,
+		r.destination_longitude
+	FROM rides r
+	WHERE r.chair_id = ?
+	ORDER BY r.updated_at DESC LIMIT 1
+	`
+		if err := tx.GetContext(ctx, rws, query, chair.ID); err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				// ride がない場合は処理をスキップ
+				if err := tx.Commit(); err != nil {
+					writeError(w, http.StatusInternalServerError, err)
+					return
+				}
+				writeJSON(w, http.StatusOK, &chairPostCoordinateResponse{
+					RecordedAt: location.CreatedAt.UnixMilli(),
+				})
 				return
 			}
-			writeJSON(w, http.StatusOK, &chairPostCoordinateResponse{
-				RecordedAt: location.CreatedAt.UnixMilli(),
-			})
+			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
 
-	rwsData := rws
+		rwsData := rws
+
+		rideCache.mu.Lock()
+		rideCache.items[chair.ID] = Ride{
+			ID:                   rwsData.ID,
+			PickupLatitude:       rwsData.PickupLatitude,
+			PickupLongitude:      rwsData.PickupLongitude,
+			DestinationLatitude:  rwsData.DestinationLatitude,
+			DestinationLongitude: rwsData.DestinationLongitude,
+		}
+		rideCache.mu.Unlock()
+	}
 
 	statusStr, err := getLatestRideStatus(ctx, tx, rwsData.ID)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
