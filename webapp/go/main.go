@@ -28,11 +28,20 @@ var latestRideStatusCache = struct {
 
 type RideCache struct {
 	mu    sync.RWMutex
-	items map[string]Ride // ridesテーブルのデータ
+	items map[string]Ride // ridesテーブルのデータ.
 }
 
 var rideCache = &RideCache{
 	items: make(map[string]Ride),
+}
+
+type ChairRideCache struct {
+	mu    sync.RWMutex
+	items map[string][]string // chairID -> []rideID
+}
+
+var chairRideCache = &ChairRideCache{
+	items: make(map[string][]string),
 }
 
 func loadLatestRideStatusCache(ctx context.Context) error {
