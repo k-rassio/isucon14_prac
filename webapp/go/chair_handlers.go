@@ -214,20 +214,6 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// ride := &Ride{}
-
-	// if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
-	// 	if !errors.Is(err, sql.ErrNoRows) {
-	// 		writeError(w, http.StatusInternalServerError, err)
-	// 		return
-	// 	}
-	// } else {
-	// 	status, err := getLatestRideStatus(ctx, tx, ride.ID)
-	// 	if err != nil {
-	// 		writeError(w, http.StatusInternalServerError, err)
-	// 		return
-	// 	}
-
 	type rideWithLatest struct {
 		ID                   string `db:"id"`
 		PickupLatitude       int    `db:"pickup_latitude"`
@@ -355,18 +341,32 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback()
 	ride := &Ride{}
+	var rideInCache bool
 	yetSentRideStatus := RideStatus{}
 	status := ""
 
-	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
-				RetryAfterMs: 1000,
-			})
+	chairRideCache.mu.RLock()
+	tmpRide, ok := rideCache.items[chair.ID]
+	if ok {
+		*ride = tmpRide // ポインタが指す中身を書き換える
+		rideInCache = true
+	}
+	chairRideCache.mu.RUnlock()
+
+	if !rideInCache {
+		if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				writeJSON(w, http.StatusOK, &chairGetNotificationResponse{
+					RetryAfterMs: 1000,
+				})
+				return
+			}
+			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
-		writeError(w, http.StatusInternalServerError, err)
-		return
+		rideCache.mu.Lock()
+		rideCache.items[chair.ID] = *ride
+		rideCache.mu.Unlock()
 	}
 
 	if err := tx.GetContext(ctx, &yetSentRideStatus, `SELECT * FROM ride_statuses WHERE ride_id = ? AND chair_sent_at IS NULL ORDER BY created_at ASC LIMIT 1`, ride.ID); err != nil {

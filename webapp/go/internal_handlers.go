@@ -50,5 +50,13 @@ func internalGetMatching(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	chairRideCache.mu.Lock()
+	chairRideCache.items[matched.ID] = append(chairRideCache.items[matched.ID], ride.ID)
+	chairRideCache.mu.Unlock()
+
+	rideCache.mu.Lock()
+	rideCache.items[matched.ID] = *ride
+	rideCache.mu.Unlock()
+
 	w.WriteHeader(http.StatusNoContent)
 }

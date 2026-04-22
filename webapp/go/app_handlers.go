@@ -612,6 +612,13 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	rideCache.mu.Lock()
+	if ride.ChairID.Valid {
+		rideCache.items[ride.ChairID.String] = *ride
+	}
+	rideCache.mu.Unlock()
+
 	if count, err := result.RowsAffected(); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
