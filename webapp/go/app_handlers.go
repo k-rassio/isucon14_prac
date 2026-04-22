@@ -991,10 +991,21 @@ func appGetNearbyChairs(w http.ResponseWriter, r *http.Request) {
 		// }
 
 		// fetch ride ids for this chair and check latest status via cache
-		var rideIDs []string
-		if err := tx.SelectContext(ctx, &rideIDs, `SELECT id FROM rides WHERE chair_id = ? ORDER BY created_at DESC`, chair.ID); err != nil {
-			writeError(w, http.StatusInternalServerError, err)
-			return
+
+		chairRideCache.mu.RLock()
+		rideIDs, rideInCache := chairRideCache.items[chair.ID]
+		chairRideCache.mu.RUnlock()
+
+		if !rideInCache {
+			var rideIDs []string
+			if err := tx.SelectContext(ctx, &rideIDs, `SELECT id FROM rides WHERE chair_id = ? ORDER BY created_at DESC`, chair.ID); err != nil {
+				writeError(w, http.StatusInternalServerError, err)
+				return
+			}
+
+			chairRideCache.mu.Lock()
+			chairRideCache.items[chair.ID] = rideIDs
+			chairRideCache.mu.Unlock()
 		}
 
 		skip := false
