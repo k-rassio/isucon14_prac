@@ -32,20 +32,27 @@ func internalGetMatching(w http.ResponseWriter, r *http.Request) {
 	empty := false
 
 	err = tx.GetContext(ctx, matched, `
-		SELECT * FROM chairs 
-		WHERE is_active = TRUE 
-		AND id NOT IN (
+		SELECT c.*
+		FROM chairs c
+		INNER JOIN chair_locations cl ON c.id = cl.chair_id
+		INNER JOIN (
+			SELECT chair_id, MAX(created_at) AS max_created_at
+			FROM chair_locations
+			GROUP BY chair_id
+		) latest ON latest.chair_id = cl.chair_id AND latest.max_created_at = cl.created_at
+		WHERE c.is_active = TRUE
+		AND c.id NOT IN (
 			-- 「まだ終わっていないライド」を担当している椅子IDを除外する
-			SELECT DISTINCT r.chair_id 
+			SELECT DISTINCT r.chair_id
 			FROM rides r
 			INNER JOIN ride_statuses rs ON r.id = rs.ride_id
 			WHERE r.chair_id IS NOT NULL
 			GROUP BY r.id
 			HAVING COUNT(rs.chair_sent_at) < 6
 		)
-		ORDER BY RAND() 
+		ORDER BY ABS(cl.latitude - ?) + ABS(cl.longitude - ?) ASC
 		LIMIT 1
-	`)
+	`, ride.PickupLatitude, ride.PickupLongitude)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
