@@ -159,3 +159,11 @@ CREATE TABLE total_distance (
 
 ALTER TABLE total_distance ADD INDEX idx_chair_id(chair_id);
 
+DROP TABLE IF EXISTS chair_latest_locations;
+CREATE TABLE chair_latest_locations (
+    chair_id     VARCHAR(26) NOT NULL COMMENT '椅子ID',
+    latitude     INT         NOT NULL COMMENT '最新の緯度',
+    longitude    INT         NOT NULL COMMENT '最新の経度',
+    updated_at   DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新日時',
+    PRIMARY KEY (chair_id)
+) COMMENT = '椅子の最新位置情報テーブル';
