@@ -34,12 +34,7 @@ func internalGetMatching(w http.ResponseWriter, r *http.Request) {
 	err = tx.GetContext(ctx, matched, `
 		SELECT c.*
 		FROM chairs c
-		INNER JOIN chair_locations cl ON c.id = cl.chair_id
-		INNER JOIN (
-			SELECT chair_id, MAX(created_at) AS max_created_at
-			FROM chair_locations
-			GROUP BY chair_id
-		) latest ON latest.chair_id = cl.chair_id AND latest.max_created_at = cl.created_at
+		INNER JOIN chair_latest_locations cl ON c.id = cl.chair_id
 		WHERE c.is_active = TRUE
 		AND c.id NOT IN (
 			-- 「まだ終わっていないライド」を担当している椅子IDを除外する
