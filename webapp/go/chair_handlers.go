@@ -226,8 +226,11 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		DestinationLongitude int    `db:"destination_longitude"`
 	}
 
+	var rwsData Ride
+	var rideInCache bool
+
 	rideCache.mu.RLock()
-	rwsData, rideInCache := rideCache.items[chair.ID]
+	rwsData, rideInCache = rideCache.items[chair.ID]
 	rideCache.mu.RUnlock()
 
 	if !rideInCache {
