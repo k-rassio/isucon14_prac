@@ -259,16 +259,16 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		rwsData := rws
-
-		rideCache.mu.Lock()
-		rideCache.items[chair.ID] = Ride{
+		rwsData = Ride{
 			ID:                   rwsData.ID,
 			PickupLatitude:       rwsData.PickupLatitude,
 			PickupLongitude:      rwsData.PickupLongitude,
 			DestinationLatitude:  rwsData.DestinationLatitude,
 			DestinationLongitude: rwsData.DestinationLongitude,
 		}
+
+		rideCache.mu.Lock()
+		rideCache.items[chair.ID] = rwsData
 		rideCache.mu.Unlock()
 	}
 
