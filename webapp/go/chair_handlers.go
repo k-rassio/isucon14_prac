@@ -132,19 +132,18 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	chair := ctx.Value("chair").(*Chair)
 
-	tx, err := db.Beginx()
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-	defer tx.Rollback()
-
 	// look up the previous location from memory cache first.  If there's
 	// no entry yet we still need to fall back to the database so that we
 	// calculate correct distance after a restart or cache miss.  When the
 	// DB query succeeds we store the result back into the cache.
 	var prevLocation ChairLocation
 	hasPrev := false
+	tx, err := db.Beginx()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer tx.Rollback()
 	if v, ok := latestChairLocation.Load(chair.ID); ok {
 		prevLocation = v.(ChairLocation)
 		hasPrev = true
