@@ -138,18 +138,12 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	// DB query succeeds we store the result back into the cache.
 	var prevLocation ChairLocation
 	hasPrev := false
-	tx, err := db.Beginx()
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-	defer tx.Rollback()
 	if v, ok := latestChairLocation.Load(chair.ID); ok {
 		prevLocation = v.(ChairLocation)
 		hasPrev = true
 	} else {
 		// cache miss, try the database once
-		if err := tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? ORDER BY created_at DESC LIMIT 1`, chair.ID); err == nil {
+		if err := db.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? ORDER BY created_at DESC LIMIT 1`, chair.ID); err == nil {
 			hasPrev = true
 			latestChairLocation.Store(chair.ID, prevLocation)
 		} else if !errors.Is(err, sql.ErrNoRows) {
@@ -157,6 +151,12 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	tx, err := db.Beginx()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer tx.Rollback()
 
 	chairLocationID := ulid.Make().String()
 	if _, err := tx.ExecContext(
@@ -280,6 +280,8 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var updatedStatus string
+
 	if statusStr != "COMPLETED" && statusStr != "CANCELED" {
 		if req.Latitude == rwsData.PickupLatitude && req.Longitude == rwsData.PickupLongitude && statusStr == "ENROUTE" {
 			newStatusID := ulid.Make().String()
@@ -287,7 +289,8 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
-			setLatestRideStatus(rwsData.ID, "PICKUP")
+			// setLatestRideStatus(rwsData.ID, "PICKUP")
+			updatedStatus = "PICKUP"
 		}
 
 		if req.Latitude == rwsData.DestinationLatitude && req.Longitude == rwsData.DestinationLongitude && statusStr == "CARRYING" {
@@ -296,13 +299,18 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
-			setLatestRideStatus(rwsData.ID, "ARRIVED")
+			// setLatestRideStatus(rwsData.ID, "ARRIVED")
+			updatedStatus = "ARRIVED"
 		}
 	}
 
 	if err := tx.Commit(); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
+	}
+
+	if updatedStatus != "" {
+		setLatestRideStatus(rwsData.ID, updatedStatus)
 	}
 
 	// update the in‑memory cache with the new location so future requests

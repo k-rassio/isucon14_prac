@@ -40,10 +40,10 @@
       DROP DATABASE IF EXISTS isuride;
       CREATE DATABASE IF NOT EXISTS isuride;
     "
-- name: initialize tables
-  become: true
-  shell: |
-    sh /home/isucon/webapp/sql/init.sh
+# - name: initialize tables
+#   become: true
+#   shell: |
+#     sh /home/isucon/webapp/sql/init.sh
 
 - name: Task for isuride-matcher
   include_tasks: matcher.yaml
