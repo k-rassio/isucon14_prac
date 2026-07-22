@@ -174,22 +174,11 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	location := &ChairLocation{}
-	// if err := tx.GetContext(ctx, location, `SELECT * FROM chair_locations WHERE id = ?`, chairLocationID); err != nil {
-	// 	writeError(w, http.StatusInternalServerError, err)
-	// 	return
-	// }
 
 	location.Latitude = req.Latitude
 	location.Longitude = req.Longitude
 	location.CreatedAt = time.Now()
 
-	// total_distanceを計算してtotal_distanceテーブルに反映
-	// var prevLocation ChairLocation
-	// err = tx.GetContext(ctx, &prevLocation, `SELECT * FROM chair_locations WHERE chair_id = ? AND id != ? ORDER BY created_at DESC LIMIT 1`, chair.ID, chairLocationID)
-	// calculate distance using the cached previous location; if we
-	// didn't have one, treat this as the first report and record zero
-	// distance (matches previous behaviour when the SELECT returned
-	// sql.ErrNoRows).
 	var distance int
 	if hasPrev {
 		distance = calculateDistance(prevLocation.Latitude, prevLocation.Longitude, location.Latitude, location.Longitude)
@@ -197,16 +186,6 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		distance = 0
 	}
 
-	// 直近の合計距離を取得
-	// var totalDistance int
-	// err = tx.GetContext(ctx, &totalDistance, `SELECT distance FROM total_distance WHERE chair_id = ?`, chair.ID)
-	// if err != nil && !errors.Is(err, sql.ErrNoRows) {
-	// 	writeError(w, http.StatusInternalServerError, err)
-	// 	return
-	// }
-	// newTotalDistance := totalDistance + distance
-
-	// total_distanceテーブルにUPSERT
 	_, err = tx.ExecContext(ctx, `
     INSERT INTO total_distance (chair_id, distance, updated_at)
     VALUES (?, ?, ?)
