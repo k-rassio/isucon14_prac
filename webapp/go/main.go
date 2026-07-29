@@ -26,6 +26,16 @@ var latestRideStatusCache = struct {
 	m  map[string]string
 }{m: make(map[string]string)}
 
+type totalDistanceEntry struct {
+	Distance  int
+	UpdatedAt time.Time
+}
+
+var totalDistanceCache = struct {
+	mu sync.RWMutex
+	m  map[string]totalDistanceEntry
+}{m: make(map[string]totalDistanceEntry)}
+
 type RideCache struct {
 	mu    sync.RWMutex
 	items map[string]Ride // ridesテーブルのデータ.
@@ -71,6 +81,62 @@ func setLatestRideStatus(rideID, status string) {
 	latestRideStatusCache.mu.Lock()
 	latestRideStatusCache.m[rideID] = status
 	latestRideStatusCache.mu.Unlock()
+}
+
+func resetTotalDistanceCache() {
+	totalDistanceCache.mu.Lock()
+	defer totalDistanceCache.mu.Unlock()
+	totalDistanceCache.m = make(map[string]totalDistanceEntry)
+}
+
+func setTotalDistanceCacheValue(chairID string, distance int, updatedAt time.Time) {
+	totalDistanceCache.mu.Lock()
+	defer totalDistanceCache.mu.Unlock()
+	totalDistanceCache.m[chairID] = totalDistanceEntry{Distance: distance, UpdatedAt: updatedAt}
+}
+
+func getTotalDistanceCacheValue(chairID string) (int, time.Time, bool) {
+	totalDistanceCache.mu.RLock()
+	defer totalDistanceCache.mu.RUnlock()
+	entry, ok := totalDistanceCache.m[chairID]
+	if !ok {
+		return 0, time.Time{}, false
+	}
+	return entry.Distance, entry.UpdatedAt, true
+}
+
+func buildTotalDistanceEntry(locations []ChairLocation) (int, time.Time, bool) {
+	if len(locations) == 0 {
+		return 0, time.Time{}, false
+	}
+
+	totalDistance := 0
+	for i := 1; i < len(locations); i++ {
+		totalDistance += abs(locations[i].Latitude-locations[i-1].Latitude) + abs(locations[i].Longitude-locations[i-1].Longitude)
+	}
+	return totalDistance, locations[len(locations)-1].CreatedAt, true
+}
+
+func loadTotalDistanceCache(ctx context.Context) error {
+	var chairIDs []string
+	if err := db.SelectContext(ctx, &chairIDs, `SELECT id FROM chairs`); err != nil {
+		return err
+	}
+
+	totalDistanceCache.mu.Lock()
+	defer totalDistanceCache.mu.Unlock()
+	totalDistanceCache.m = make(map[string]totalDistanceEntry, len(chairIDs))
+
+	for _, chairID := range chairIDs {
+		var locations []ChairLocation
+		if err := db.SelectContext(ctx, &locations, `SELECT chair_id, latitude, longitude, created_at FROM chair_locations WHERE chair_id = ? ORDER BY created_at`, chairID); err != nil {
+			return err
+		}
+		if distance, updatedAt, ok := buildTotalDistanceEntry(locations); ok {
+			totalDistanceCache.m[chairID] = totalDistanceEntry{Distance: distance, UpdatedAt: updatedAt}
+		}
+	}
+	return nil
 }
 
 func getLatestRideStatusFromCache(rideID string) (string, bool) {
@@ -129,6 +195,9 @@ func setup() http.Handler {
 	// load latest ride status cache
 	if err := loadLatestRideStatusCache(context.Background()); err != nil {
 		slog.Warn("failed to load latest ride status cache", "err", err)
+	}
+	if err := loadTotalDistanceCache(context.Background()); err != nil {
+		slog.Warn("failed to load total distance cache", "err", err)
 	}
 
 	mux := chi.NewRouter()
@@ -199,56 +268,9 @@ func postInitialize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// total_distanceテーブルを全chairについて再作成
-	type ChairLocation struct {
-		ChairID   string `db:"chair_id"`
-		Latitude  int    `db:"latitude"`
-		Longitude int    `db:"longitude"`
-		CreatedAt string `db:"created_at"`
-	}
-
-	var chairIDs []string
-	if err := db.SelectContext(ctx, &chairIDs, `SELECT id FROM chairs`); err != nil {
-		writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to fetch chair ids: %w", err))
+	if err := loadTotalDistanceCache(ctx); err != nil {
+		writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to rebuild total_distance cache: %w", err))
 		return
-	}
-
-	for _, chairID := range chairIDs {
-		var locations []ChairLocation
-		if err := db.SelectContext(ctx, &locations, `SELECT chair_id, latitude, longitude, created_at FROM chair_locations WHERE chair_id = ? ORDER BY created_at`, chairID); err != nil {
-			writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to fetch locations for chair %s: %w", chairID, err))
-			return
-		}
-
-		totalDistance := 0
-		for i := 1; i < len(locations); i++ {
-			d := abs(locations[i].Latitude-locations[i-1].Latitude) + abs(locations[i].Longitude-locations[i-1].Longitude)
-			totalDistance += d
-		}
-
-		var updatedAt interface{}
-		if len(locations) > 0 {
-			t, err := time.Parse(time.RFC3339, locations[len(locations)-1].CreatedAt)
-			if err != nil {
-				writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to parse created_at: %w", err))
-				return
-			}
-			updatedAt = t.Format("2006-01-02 15:04:05.000000")
-		} else {
-			updatedAt = nil
-		}
-
-		if updatedAt != nil {
-			_, err := db.ExecContext(ctx, `
-				INSERT INTO total_distance (chair_id, distance, updated_at)
-				VALUES (?, ?, ?)
-				ON DUPLICATE KEY UPDATE distance = VALUES(distance), updated_at = VALUES(updated_at)
-			`, chairID, totalDistance, updatedAt)
-			if err != nil {
-				writeError(w, http.StatusInternalServerError, fmt.Errorf("failed to upsert total_distance for chair %s: %w", chairID, err))
-				return
-			}
-		}
 	}
 
 	if _, err := db.ExecContext(ctx, "UPDATE settings SET value = ? WHERE name = 'payment_gateway_url'", req.PaymentServer); err != nil {
@@ -259,7 +281,6 @@ func postInitialize(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, postInitializeResponse{Language: "go"})
 }
 
-// abs関数がなければ追加
 func abs(x int) int {
 	if x < 0 {
 		return -x

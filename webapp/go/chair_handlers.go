@@ -186,16 +186,6 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		distance = 0
 	}
 
-	_, err = tx.ExecContext(ctx, `
-    INSERT INTO total_distance (chair_id, distance, updated_at)
-    VALUES (?, ?, ?)
-    ON DUPLICATE KEY UPDATE distance = distance + VALUES(distance), updated_at = VALUES(updated_at)
-`, chair.ID, distance, location.CreatedAt)
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-
 	type rideWithLatest struct {
 		ID                   string `db:"id"`
 		PickupLatitude       int    `db:"pickup_latitude"`
@@ -299,6 +289,9 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		Longitude: location.Longitude,
 		CreatedAt: location.CreatedAt,
 	})
+
+	currentDistance, _, _ := getTotalDistanceCacheValue(chair.ID)
+	setTotalDistanceCacheValue(chair.ID, currentDistance+distance, location.CreatedAt)
 
 	writeJSON(w, http.StatusOK, &chairPostCoordinateResponse{
 		RecordedAt: location.CreatedAt.UnixMilli(),

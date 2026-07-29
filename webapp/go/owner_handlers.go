@@ -181,19 +181,6 @@ func calculateSale(ride Ride) int {
 	return calculateFare(ride.PickupLatitude, ride.PickupLongitude, ride.DestinationLatitude, ride.DestinationLongitude)
 }
 
-type chairWithDetail struct {
-	ID                     string       `db:"id"`
-	OwnerID                string       `db:"owner_id"`
-	Name                   string       `db:"name"`
-	AccessToken            string       `db:"access_token"`
-	Model                  string       `db:"model"`
-	IsActive               bool         `db:"is_active"`
-	CreatedAt              time.Time    `db:"created_at"`
-	UpdatedAt              time.Time    `db:"updated_at"`
-	TotalDistance          int          `db:"total_distance"`
-	TotalDistanceUpdatedAt sql.NullTime `db:"total_distance_updated_at"`
-}
-
 type ownerGetChairResponse struct {
 	Chairs []ownerGetChairResponseChair `json:"chairs"`
 }
@@ -212,8 +199,7 @@ func ownerGetChairs(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	owner := ctx.Value("owner").(*Owner)
 
-	chairs := []chairWithDetail{}
-	// slog.Info("chairs", "charis", chairs)
+	chairs := []Chair{}
 	if err := db.SelectContext(ctx, &chairs, `
 SELECT
   chairs.id,
@@ -223,30 +209,27 @@ SELECT
   chairs.model,
   chairs.is_active,
   chairs.created_at,
-  chairs.updated_at,
-  IFNULL(total_distance.distance, 0) AS total_distance,
-  total_distance.updated_at AS total_distance_updated_at
+  chairs.updated_at
 FROM chairs
-LEFT JOIN total_distance ON total_distance.chair_id = chairs.id
 WHERE chairs.owner_id = ?
 `, owner.ID); err != nil {
-		slog.Error("failed to select chairs with total_distance", "owner_id", owner.ID, "error", err)
+		slog.Error("failed to select chairs", "owner_id", owner.ID, "error", err)
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
-	// slog.Info("chairs", "charis", chairs)
 	res := ownerGetChairResponse{}
 	for _, chair := range chairs {
+		totalDistance, totalDistanceUpdatedAt, ok := getTotalDistanceCacheValue(chair.ID)
 		c := ownerGetChairResponseChair{
 			ID:            chair.ID,
 			Name:          chair.Name,
 			Model:         chair.Model,
 			Active:        chair.IsActive,
 			RegisteredAt:  chair.CreatedAt.UnixMilli(),
-			TotalDistance: chair.TotalDistance,
+			TotalDistance: totalDistance,
 		}
-		if chair.TotalDistanceUpdatedAt.Valid {
-			t := chair.TotalDistanceUpdatedAt.Time.UnixMilli()
+		if ok {
+			t := totalDistanceUpdatedAt.UnixMilli()
 			c.TotalDistanceUpdatedAt = &t
 		}
 		res.Chairs = append(res.Chairs, c)
