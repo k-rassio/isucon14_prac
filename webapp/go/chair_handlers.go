@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/oklog/ulid/v2"
 )
 
@@ -122,6 +123,17 @@ type chairPostCoordinateResponse struct {
 	RecordedAt int64 `json:"recorded_at"`
 }
 
+func updateChairLocationCache(chairID string, location ChairLocation, distance int) {
+	latestChairLocation.Store(chairID, ChairLocation{
+		Latitude:  location.Latitude,
+		Longitude: location.Longitude,
+		CreatedAt: location.CreatedAt,
+	})
+
+	currentDistance, _, _ := getTotalDistanceCacheValue(chairID)
+	setTotalDistanceCacheValue(chairID, currentDistance+distance, location.CreatedAt)
+}
+
 func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := &Coordinate{}
@@ -151,15 +163,8 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	tx, err := db.Beginx()
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-	defer tx.Rollback()
-
 	chairLocationID := ulid.Make().String()
-	if _, err := tx.ExecContext(
+	if _, err := db.ExecContext(
 		ctx,
 		`INSERT INTO chair_locations (id, chair_id, latitude, longitude) VALUES (?, ?, ?, ?)`,
 		chairLocationID, chair.ID, req.Latitude, req.Longitude,
@@ -168,7 +173,7 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := tx.ExecContext(ctx, `INSERT INTO chair_latest_locations (chair_id, latitude, longitude) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE latitude = VALUES(latitude), longitude = VALUES(longitude)`, chair.ID, req.Latitude, req.Longitude); err != nil {
+	if _, err := db.ExecContext(ctx, `INSERT INTO chair_latest_locations (chair_id, latitude, longitude) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE latitude = VALUES(latitude), longitude = VALUES(longitude)`, chair.ID, req.Latitude, req.Longitude); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
@@ -214,13 +219,9 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 	WHERE r.chair_id = ?
 	ORDER BY r.updated_at DESC LIMIT 1
 	`
-		if err := tx.GetContext(ctx, rws, query, chair.ID); err != nil {
+		if err := db.GetContext(ctx, rws, query, chair.ID); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
-				// ride がない場合は処理をスキップ
-				if err := tx.Commit(); err != nil {
-					writeError(w, http.StatusInternalServerError, err)
-					return
-				}
+				updateChairLocationCache(chair.ID, *location, distance)
 				writeJSON(w, http.StatusOK, &chairPostCoordinateResponse{
 					RecordedAt: location.CreatedAt.UnixMilli(),
 				})
@@ -243,55 +244,68 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		rideCache.mu.Unlock()
 	}
 
-	statusStr, err := getLatestRideStatus(ctx, tx, rwsData.ID)
+	statusStr, err := getLatestRideStatus(ctx, db, rwsData.ID)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	var updatedStatus string
+	var statusTx *sqlx.Tx
+	var statusUpdateNeeded bool
 
 	if statusStr != "COMPLETED" && statusStr != "CANCELED" {
 		if req.Latitude == rwsData.PickupLatitude && req.Longitude == rwsData.PickupLongitude && statusStr == "ENROUTE" {
+			statusUpdateNeeded = true
+		}
+
+		if req.Latitude == rwsData.DestinationLatitude && req.Longitude == rwsData.DestinationLongitude && statusStr == "CARRYING" {
+			statusUpdateNeeded = true
+		}
+	}
+
+	if statusUpdateNeeded {
+		statusTx, err = db.Beginx()
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		defer func() {
+			if statusTx != nil {
+				_ = statusTx.Rollback()
+			}
+		}()
+
+		if req.Latitude == rwsData.PickupLatitude && req.Longitude == rwsData.PickupLongitude && statusStr == "ENROUTE" {
 			newStatusID := ulid.Make().String()
-			if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "PICKUP"); err != nil {
+			if _, err := statusTx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "PICKUP"); err != nil {
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
-			// setLatestRideStatus(rwsData.ID, "PICKUP")
 			updatedStatus = "PICKUP"
 		}
 
 		if req.Latitude == rwsData.DestinationLatitude && req.Longitude == rwsData.DestinationLongitude && statusStr == "CARRYING" {
 			newStatusID := ulid.Make().String()
-			if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "ARRIVED"); err != nil {
+			if _, err := statusTx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, rwsData.ID, "ARRIVED"); err != nil {
 				writeError(w, http.StatusInternalServerError, err)
 				return
 			}
-			// setLatestRideStatus(rwsData.ID, "ARRIVED")
 			updatedStatus = "ARRIVED"
 		}
-	}
 
-	if err := tx.Commit(); err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
+		if err := statusTx.Commit(); err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		statusTx = nil
 	}
 
 	if updatedStatus != "" {
 		setLatestRideStatus(rwsData.ID, updatedStatus)
 	}
 
-	// update the in‑memory cache with the new location so future requests
-	// can compute distance without hitting the database.
-	latestChairLocation.Store(chair.ID, ChairLocation{
-		Latitude:  location.Latitude,
-		Longitude: location.Longitude,
-		CreatedAt: location.CreatedAt,
-	})
-
-	currentDistance, _, _ := getTotalDistanceCacheValue(chair.ID)
-	setTotalDistanceCacheValue(chair.ID, currentDistance+distance, location.CreatedAt)
+	updateChairLocationCache(chair.ID, *location, distance)
 
 	writeJSON(w, http.StatusOK, &chairPostCoordinateResponse{
 		RecordedAt: location.CreatedAt.UnixMilli(),
