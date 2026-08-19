@@ -28,7 +28,7 @@
     path: /home/isucon/mysql_slow_result
     state: directory
     mode: '0755'
-  tags: install
+  tags: [install, execute]
 
 - name: mysqldump
   become: true
@@ -49,7 +49,7 @@
     path: /home/isucon/pt-query_result
     state: directory
     mode: '0755'
-  tags: install
+  tags: [install, execute]
 
 - name: execute pt-query-digest
   become: true
