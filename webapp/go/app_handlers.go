@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"database/sql"
-	"errors" // ← slogのみ使用
+	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -410,9 +411,6 @@ func appPostRides(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// set cache
-	setLatestRideStatus(rideID, "MATCHING")
-
 	var rideCount int
 	if err := tx.GetContext(ctx, &rideCount, `SELECT COUNT(*) FROM rides WHERE user_id = ? `, user.ID); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
@@ -489,6 +487,9 @@ func appPostRides(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	setLatestRideStatus(rideID, "MATCHING")
+	slog.Info("ride_statuses updated", "ride_id", rideID, "status", "MATCHING")
 
 	writeJSON(w, http.StatusAccepted, &appPostRidesResponse{
 		RideID: rideID,
@@ -636,9 +637,6 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// set cache
-	setLatestRideStatus(rideID, "COMPLETED")
-
 	if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE id = ?`, rideID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			writeError(w, http.StatusNotFound, errors.New("ride not found"))
@@ -692,6 +690,9 @@ func appPostRideEvaluatation(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	setLatestRideStatus(rideID, "COMPLETED")
+	slog.Info("ride_statuses updated", "ride_id", rideID, "status", "COMPLETED")
 
 	writeJSON(w, http.StatusOK, &appPostRideEvaluationResponse{
 		CompletedAt: ride.UpdatedAt.UnixMilli(),

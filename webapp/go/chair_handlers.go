@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"sync"
 	"time"
@@ -303,6 +304,7 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 
 	if updatedStatus != "" {
 		setLatestRideStatus(rwsData.ID, updatedStatus)
+		slog.Info("ride_statuses updated", "ride_id", rwsData.ID, "status", updatedStatus, "func", "chairPostCoordinate")
 	}
 
 	updateChairLocationCache(chair.ID, *location, distance)
@@ -463,15 +465,25 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var updatedStatus string
 	switch req.Status {
 	case "ENROUTE":
+		status, err := getLatestRideStatus(ctx, tx, ride.ID)
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		if status != "MATCHING" {
+			writeError(w, http.StatusBadRequest, errors.New("chair has already been dispatched"))
+			return
+		}
 		newStatusID := ulid.Make().String()
 		if _, err := tx.ExecContext(ctx, "INSERT INTO ride_statuses (id, ride_id, status) VALUES (?, ?, ?)", newStatusID, ride.ID, "ENROUTE"); err != nil {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
-		setLatestRideStatus(ride.ID, "ENROUTE")
-		// slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "ENROUTE", "status_id", newStatusID)
+		updatedStatus = "ENROUTE"
+		slog.Info("ride_statuses updated", "ride_id", ride.ID, "status", "ENROUTE", "status_id", newStatusID, "func", "chairPostRideStatus")
 	case "CARRYING":
 		status, err := getLatestRideStatus(ctx, tx, ride.ID)
 		if err != nil {
@@ -487,8 +499,8 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
-		setLatestRideStatus(ride.ID, "CARRYING")
-		// slog.Info("INSERT ride_statuses", "ride_id", ride.ID, "status", "CARRYING", "status_id", newStatusID)
+		updatedStatus = "CARRYING"
+		slog.Info("ride_statuses updated", "ride_id", ride.ID, "status", "CARRYING", "status_id", newStatusID, "func", "chairPostRideStatus")
 	default:
 		writeError(w, http.StatusBadRequest, errors.New("invalid status"))
 	}
@@ -497,6 +509,8 @@ func chairPostRideStatus(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	setLatestRideStatus(ride.ID, updatedStatus)
 
 	w.WriteHeader(http.StatusNoContent)
 }
