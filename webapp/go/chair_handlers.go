@@ -299,13 +299,17 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusInternalServerError, err)
 			return
 		}
+
+		if updatedStatus != "" {
+			setLatestRideStatus(rwsData.ID, updatedStatus)
+			slog.Info("ride_statuses updated", "ride_id", rwsData.ID, "status", updatedStatus, "func", "chairPostCoordinate")
+		}
+
 		statusTx = nil
+		
 	}
 
-	if updatedStatus != "" {
-		setLatestRideStatus(rwsData.ID, updatedStatus)
-		slog.Info("ride_statuses updated", "ride_id", rwsData.ID, "status", updatedStatus, "func", "chairPostCoordinate")
-	}
+	
 
 	updateChairLocationCache(chair.ID, *location, distance)
 
@@ -347,13 +351,13 @@ func chairGetNotification(w http.ResponseWriter, r *http.Request) {
 	yetSentRideStatus := RideStatus{}
 	status := ""
 
-	chairRideCache.mu.RLock()
+	rideCache.mu.RLock()
 	tmpRide, ok := rideCache.items[chair.ID]
 	if ok {
 		*ride = tmpRide // ポインタが指す中身を書き換える
 		rideInCache = true
 	}
-	chairRideCache.mu.RUnlock()
+	rideCache.mu.RUnlock()
 
 	if !rideInCache {
 		if err := tx.GetContext(ctx, ride, `SELECT * FROM rides WHERE chair_id = ? ORDER BY updated_at DESC LIMIT 1`, chair.ID); err != nil {
